@@ -1,7 +1,9 @@
 const CACHE_NAME = 'italiano-app-v1';
 const urlsToCache = [
-  'italiano.html',
-  'manifest.json'
+  'index.html',
+  'manifest.json',
+  'icon-192-ita.png',
+  'icon-512-ita.png'
 ];
 
 self.addEventListener('install', (event) => {
