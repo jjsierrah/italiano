@@ -1,0 +1,21 @@
+{
+  "short_name": "ItalianoApp",
+  "name": "JJ Italiano App",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "italiano.html",
+  "background_color": "#f3e5f5",
+  "display": "standalone",
+  "scope": "./",
+  "theme_color": "#6a1b9a"
+}
