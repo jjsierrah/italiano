@@ -101,7 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
   generarConjugaciones();
 
   // === ESTADO GLOBAL ===
-  let modo = null; // 'vocabulario', 'verbos', 'examen'
+  let modo = null;
   let categoriaActual = null;
   let modoEscritura = false;
   let statsSesion = { aciertos: 0, errores: 0 };
@@ -115,11 +115,16 @@ document.addEventListener('DOMContentLoaded', () => {
   let tiempoRestante = 0;
 
   function actualizarStats() {
-    document.getElementById('stats-sesion').textContent = 
-      modo === 'examen' ? `Pregunta: ${indiceExamen + 1}/${preguntasExamen.length}` : 
-      `Aciertos: ${statsSesion.aciertos} | Errores: ${statsSesion.errores}`;
-    document.getElementById('stats-global').textContent = 
-      `Total: ✅ ${statsGlobal.aciertos} | ❌ ${statsGlobal.errores}`;
+    const statsSesionEl = document.getElementById('stats-sesion');
+    const statsGlobalEl = document.getElementById('stats-global');
+    if (statsSesionEl) {
+      statsSesionEl.textContent = modo === 'examen' ? 
+        `Pregunta: ${indiceExamen + 1}/${preguntasExamen.length}` : 
+        `Aciertos: ${statsSesion.aciertos} | Errores: ${statsSesion.errores}`;
+    }
+    if (statsGlobalEl) {
+      statsGlobalEl.textContent = `Total: ✅ ${statsGlobal.aciertos} | ❌ ${statsGlobal.errores}`;
+    }
   }
 
   function guardarStats() {
@@ -148,20 +153,16 @@ document.addEventListener('DOMContentLoaded', () => {
   function configurarExamen(numPreguntas, segundos = null) {
     examenActivo = true;
     modo = 'examen';
-    modoEscritura = Math.random() > 0.5; // mezcla modos
+    modoEscritura = Math.random() > 0.5;
     preguntasExamen = [];
     resultadosExamen = [];
     indiceExamen = 0;
     tiempoRestante = segundos;
 
-    // Generar preguntas mezcladas
     const todasPalabras = vocabularioPorCategoria.todo;
     const todosVerbos = Object.keys(conjugaciones);
-    const tipos = ['vocab', 'verbo'];
-
     for (let i = 0; i < numPreguntas; i++) {
       if (Math.random() > 0.4 && todosVerbos.length > 0) {
-        // Pregunta de verbo
         const tipo = ["are","ere","ire"][Math.floor(Math.random()*3)];
         const verbo = verbos[tipo][Math.floor(Math.random()*verbos[tipo].length)];
         const tiempo = tiempos[Math.floor(Math.random()*3)];
@@ -169,7 +170,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const correcta = conjugaciones[verbo][tiempo][suj];
         preguntasExamen.push({ tipo: 'verbo', verbo, tiempo, suj, correcta, contexto: `${verbo} (${tiempo}, ${sujetosEs[suj]})` });
       } else {
-        // Pregunta de vocabulario
         const [es, it] = todasPalabras[Math.floor(Math.random() * todasPalabras.length)];
         preguntasExamen.push({ tipo: 'vocab', es, it, contexto: es });
       }
@@ -198,7 +198,10 @@ document.addEventListener('DOMContentLoaded', () => {
   function actualizarTemporizador() {
     const mins = Math.floor(tiempoRestante / 60);
     const secs = tiempoRestante % 60;
-    document.getElementById('examen-timer').textContent = `⏳ Tiempo: ${mins}:${secs < 10 ? '0' : ''}${secs}`;
+    const timerEl = document.getElementById('examen-timer');
+    if (timerEl) {
+      timerEl.textContent = `⏳ Tiempo: ${mins}:${secs < 10 ? '0' : ''}${secs}`;
+    }
   }
 
   function mostrarSiguientePreguntaExamen() {
@@ -301,7 +304,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const total = resultadosExamen.length;
     const porcentaje = Math.round((aciertos / total) * 100);
 
-    // Guardar historial de exámenes
     const historial = JSON.parse(localStorage.getItem('examenes_italiano')) || [];
     historial.push({
       fecha: new Date().toLocaleString(),
@@ -336,8 +338,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     document.getElementById('resultados-contenido').innerHTML = html + 
       '<button onclick="document.getElementById(\'examen-resultados\').style.display=\'none\'; document.getElementById(\'menu-principal\').style.display=\'block\';">Menú principal</button>';
-                                                                               }
-    // === FUNCIONES EXISTENTES (vocabulario y verbos normales) ===
+}
+  // === FUNCIONES EXISTENTES (vocabulario y verbos normales) ===
   function volverMenuJuego() {
     if (temporizador) clearInterval(temporizador);
     modo = null;
@@ -351,10 +353,12 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function toggleModo() {
-    if (examenActivo) return; // No permitir en examen
+    if (examenActivo) return;
     modoEscritura = !modoEscritura;
     const btn = document.querySelector('#juego button[onclick="toggleModo()"]');
-    btn.textContent = modoEscritura ? '↔️ Cambiar a opción múltiple' : '↔️ Cambiar a modo escritura';
+    if (btn) {
+      btn.textContent = modoEscritura ? '↔️ Cambiar a opción múltiple' : '↔️ Cambiar a modo escritura';
+    }
     document.getElementById('opciones').style.display = modoEscritura ? 'none' : 'block';
     document.getElementById('respuesta-escrita').style.display = modoEscritura ? 'block' : 'none';
     document.getElementById('btn-enviar').style.display = modoEscritura ? 'block' : 'none';
@@ -483,13 +487,16 @@ document.addEventListener('DOMContentLoaded', () => {
   function mostrarErrores() {
     const div = document.getElementById("errores-lista");
     if (errores.length === 0) {
-      div.innerHTML = "<p>¡No tienes errores guardados! 🌟</p>";
+      if (div) div.innerHTML = "<p>¡No tienes errores guardados! 🌟</p>";
     } else {
-      div.innerHTML = errores.map(e =>
-        `<div><strong>${e.contexto}</strong><br/>Tu respuesta: ${e.dada}<br/>Correcto: ${e.correcta}</div><hr>`
-      ).join('');
+      if (div) {
+        div.innerHTML = errores.map(e =>
+          `<div><strong>${e.contexto}</strong><br/>Tu respuesta: ${e.dada}<br/>Correcto: ${e.correcta}</div><hr>`
+        ).join('');
+      }
     }
-    document.getElementById("errores").style.display = "block";
+    const erroresEl = document.getElementById("errores");
+    if (erroresEl) erroresEl.style.display = "block";
   }
 
   function reiniciarErrores() {
@@ -497,7 +504,10 @@ document.addEventListener('DOMContentLoaded', () => {
     statsGlobal = { aciertos: 0, errores: 0 };
     localStorage.removeItem('examenes_italiano');
     guardarStats();
-    document.getElementById("errores-lista").innerHTML = "<p>Errores y estadísticas reiniciados.</p>";
+    const erroresLista = document.getElementById("errores-lista");
+    if (erroresLista) {
+      erroresLista.innerHTML = "<p>Errores y estadísticas reiniciados.</p>";
+    }
     actualizarStats();
   }
 
@@ -505,7 +515,10 @@ document.addEventListener('DOMContentLoaded', () => {
   function applyTheme(theme) {
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem('theme', theme);
-    document.getElementById('theme-toggle').textContent = theme === 'dark' ? '🌞' : '🌓';
+    const toggle = document.getElementById('theme-toggle');
+    if (toggle) {
+      toggle.textContent = theme === 'dark' ? '🌞' : '🌓';
+    }
   }
 
   function initTheme() {
@@ -520,10 +533,23 @@ document.addEventListener('DOMContentLoaded', () => {
     applyTheme(theme);
   }
 
-  document.getElementById('theme-toggle').addEventListener('click', () => {
+  // Registrar el listener del tema
+  document.getElementById('theme-toggle')?.addEventListener('click', () => {
     const current = document.documentElement.getAttribute('data-theme');
     applyTheme(current === 'dark' ? 'light' : 'dark');
   });
+
+  // === Hacer funciones accesibles globalmente para onclick inline ===
+  window.mostrarCategorias = mostrarCategorias;
+  window.iniciarVerbos = iniciarVerbos;
+  window.iniciarExamen = iniciarExamen;
+  window.configurarExamen = configurarExamen;
+  window.mostrarErrores = mostrarErrores;
+  window.reiniciarErrores = reiniciarErrores;
+  window.volverMenuJuego = volverMenuJuego;
+  window.toggleModo = toggleModo;
+  window.iniciarVocabulario = iniciarVocabulario;
+  window.verDetallesExamen = verDetallesExamen;
 
   // === INICIAR ===
   initTheme();
