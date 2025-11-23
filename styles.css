@@ -5,13 +5,13 @@
   --border-color: #e0e0e0;
   --button-bg: #43a047;
   --button-hover: #2e7d32;
-  --button-secondary: #1e88e5;
+  --button-secondary: #1976d2;
   --button-secondary-hover: #1565c0;
   --error-bg: #ffebee;
   --success-bg: #e8f5e8;
   --stats-color: #555;
-  --opcion-bg: #e1f5fe;
-  --opcion-text: #01579b;
+  --opcion-bg: #e3f2fd;
+  --opcion-text: #0d47a1;
   --shadow: 0 4px 12px rgba(0,0,0,0.08);
 }
 
@@ -27,7 +27,7 @@
   --error-bg: #2c1a1e;
   --success-bg: #1b2a1b;
   --stats-color: #aaa;
-  --opcion-bg: #1a237e;
+  --opcion-bg: #0d47a1;
   --opcion-text: #bbdefb;
   --shadow: 0 4px 12px rgba(0,0,0,0.3);
 }
@@ -52,7 +52,7 @@ body {
 
 h1 {
   text-align: center;
-  color: #6a1b9a;
+  color: #0d47a1;
   margin-top: 0;
   font-size: 1.8em;
 }
@@ -98,11 +98,15 @@ button:hover {
   opacity: 0.9;
 }
 
-#modo-seleccion button {
+#modo-seleccion button,
+.categoria-btn,
+.examen-btn {
   background: var(--button-secondary);
 }
 
-#modo-seleccion button:hover {
+#modo-seleccion button:hover,
+.categoria-btn:hover,
+.examen-btn:hover {
   background: var(--button-secondary-hover);
 }
 
@@ -137,14 +141,6 @@ input#respuesta-escrita {
   font-weight: bold;
   margin: 10px 0;
   color: var(--stats-color);
-}
-
-.categoria-btn, .examen-btn {
-  background: #ab47bc;
-}
-
-.categoria-btn:hover, .examen-btn:hover {
-  background: #8e24aa;
 }
 
 .examen-timer {
