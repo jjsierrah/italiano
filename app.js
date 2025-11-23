@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   vocabularioPorCategoria.todo = todo;
 
-  // === VERBOS ===
+  // === VERBOS REGULARES ===
   const verbos = {
     are: ["parlare","mangiare","studiare","lavorare","abitare","ascoltare","guardare","camminare","giocare","ballare","cantare","nuotare","viaggiare","pagare","cercare","chiamare","aiutare","iniziare","prenotare","ordinare"],
     ere: ["leggere","vedere","scrivere","prendere","credere","rispondere","vivere","correre","perdere","vendere","temere","battere","offrire","aprire","coprire","soffrire","rompere","scoprire","descrivere","decidere"],
@@ -100,6 +100,85 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   generarConjugaciones();
 
+  // === VERBOS IRREGULARES ===
+  const verbosIrregulares = {
+    andare: {
+      presente: ["vado", "vai", "va", "andiamo", "andate", "vanno"],
+      passato: ["sono andato", "sei andato", "è andato", "siamo andati", "siete andati", "sono andati"],
+      futuro: ["andrò", "andrai", "andrà", "andremo", "andrete", "andranno"]
+    },
+    fare: {
+      presente: ["faccio", "fai", "fa", "facciamo", "fate", "fanno"],
+      passato: ["ho fatto", "hai fatto", "ha fatto", "abbiamo fatto", "avete fatto", "hanno fatto"],
+      futuro: ["farò", "farai", "farà", "faremo", "farete", "faranno"]
+    },
+    dire: {
+      presente: ["dico", "dici", "dice", "diciamo", "dite", "dicono"],
+      passato: ["ho detto", "hai detto", "ha detto", "abbiamo detto", "avete detto", "hanno detto"],
+      futuro: ["dirò", "dirai", "dirà", "diremo", "direte", "diranno"]
+    },
+    dare: {
+      presente: ["do", "dai", "da", "diamo", "date", "danno"],
+      passato: ["ho dato", "hai dato", "ha dato", "abbiamo dato", "avete dato", "hanno dato"],
+      futuro: ["darò", "darai", "darà", "daremo", "darete", "daranno"]
+    },
+    vedere: {
+      presente: ["vedo", "vedi", "vede", "vediamo", "vedete", "vedono"],
+      passato: ["ho visto", "hai visto", "ha visto", "abbiamo visto", "avete visto", "hanno visto"],
+      futuro: ["vedrò", "vedrai", "vedrà", "vedremo", "vedrete", "vedranno"]
+    },
+    venire: {
+      presente: ["vengo", "vieni", "viene", "veniamo", "venite", "vengono"],
+      passato: ["sono venuto", "sei venuto", "è venuto", "siamo venuti", "siete venuti", "sono venuti"],
+      futuro: ["verrò", "verrai", "verrà", "verremo", "verrete", "verranno"]
+    },
+    uscire: {
+      presente: ["esco", "esci", "esce", "usciamo", "uscite", "escono"],
+      passato: ["sono uscito", "sei uscito", "è uscito", "siamo usciti", "siete usciti", "sono usciti"],
+      futuro: ["uscirò", "uscirai", "uscirà", "usciremo", "uscirete", "usciranno"]
+    },
+    dovere: {
+      presente: ["devo", "devi", "deve", "dobbiamo", "dovete", "devono"],
+      passato: ["ho dovuto", "hai dovuto", "ha dovuto", "abbiamo dovuto", "avete dovuto", "hanno dovuto"],
+      futuro: ["dovrò", "dovrai", "dovrà", "dovremo", "dovrete", "dovranno"]
+    },
+    potere: {
+      presente: ["posso", "puoi", "può", "possiamo", "potete", "possono"],
+      passato: ["ho potuto", "hai potuto", "ha potuto", "abbiamo potuto", "avete potuto", "hanno potuto"],
+      futuro: ["potrò", "potrai", "potrà", "potremo", "potrete", "potranno"]
+    },
+    volere: {
+      presente: ["voglio", "vuoi", "vuole", "vogliamo", "volete", "vogliono"],
+      passato: ["ho voluto", "hai voluto", "ha voluto", "abbiamo voluto", "avete voluto", "hanno voluto"],
+      futuro: ["vorrò", "vorrai", "vorrà", "vorremo", "vorrete", "vorranno"]
+    },
+    stare: {
+      presente: ["sto", "stai", "sta", "stiamo", "state", "stanno"],
+      passato: ["sono stato", "sei stato", "è stato", "siamo stati", "siete stati", "sono stati"],
+      futuro: ["starò", "starai", "starà", "staremo", "starete", "staranno"]
+    },
+    sapere: {
+      presente: ["so", "sai", "sa", "sappiamo", "sapete", "sanno"],
+      passato: ["ho saputo", "hai saputo", "ha saputo", "abbiamo saputo", "avete saputo", "hanno saputo"],
+      futuro: ["saprò", "saprai", "saprà", "sapremo", "saprète", "sapranno"]
+    },
+    bere: {
+      presente: ["bevo", "bevi", "beve", "beviamo", "bevete", "bevono"],
+      passato: ["ho bevuto", "hai bevuto", "ha bevuto", "abbiamo bevuto", "avete bevuto", "hanno bevuto"],
+      futuro: ["berrò", "berrai", "berrà", "berremo", "berrete", "berranno"]
+    },
+    chiedere: {
+      presente: ["chiedo", "chiedi", "chiede", "chiediamo", "chiedete", "chiedono"],
+      passato: ["ho chiesto", "hai chiesto", "ha chiesto", "abbiamo chiesto", "avete chiesto", "hanno chiesto"],
+      futuro: ["chiederò", "chiederai", "chiederà", "chiederemo", "chiederete", "chiederanno"]
+    },
+    leggere: {
+      presente: ["leggo", "leggi", "legge", "leggiamo", "leggete", "leggono"],
+      passato: ["ho letto", "hai letto", "ha letto", "abbiamo letto", "avete letto", "hanno letto"],
+      futuro: ["leggerò", "leggerai", "leggerà", "leggeremo", "leggerete", "leggeranno"]
+    }
+  };
+
   // === ESTADO GLOBAL ===
   let modo = null;
   let categoriaActual = null;
@@ -113,6 +192,8 @@ document.addEventListener('DOMContentLoaded', () => {
   let resultadosExamen = [];
   let temporizador = null;
   let tiempoRestante = 0;
+  let preguntaActual = null;
+  let modoActual = null;
 
   function actualizarStats() {
     const statsSesionEl = document.getElementById('stats-sesion');
@@ -212,14 +293,29 @@ document.addEventListener('DOMContentLoaded', () => {
     tiempoRestante = segundos;
 
     const todasPalabras = vocabularioPorCategoria.todo;
-    const todosVerbos = Object.keys(conjugaciones);
+    const todosVerbos = [
+      ...Object.keys(conjugaciones),
+      ...Object.keys(verbosIrregulares)
+    ];
     for (let i = 0; i < numPreguntas; i++) {
       if (Math.random() > 0.4 && todosVerbos.length > 0) {
-        const tipo = ["are","ere","ire"][Math.floor(Math.random()*3)];
-        const verbo = verbos[tipo][Math.floor(Math.random()*verbos[tipo].length)];
+        const usarIrregular = Math.random() > 0.6;
+        let verbo;
+        if (usarIrregular) {
+          const irregularLista = Object.keys(verbosIrregulares);
+          verbo = irregularLista[Math.floor(Math.random() * irregularLista.length)];
+        } else {
+          const tipo = ["are","ere","ire"][Math.floor(Math.random()*3)];
+          verbo = verbos[tipo][Math.floor(Math.random()*verbos[tipo].length)];
+        }
         const tiempo = tiempos[Math.floor(Math.random()*3)];
         const suj = Math.floor(Math.random()*6);
-        const correcta = conjugaciones[verbo][tiempo][suj];
+        let correcta;
+        if (verbosIrregulares[verbo]) {
+          correcta = verbosIrregulares[verbo][tiempo][suj];
+        } else {
+          correcta = conjugaciones[verbo][tiempo][suj];
+        }
         preguntasExamen.push({ tipo: 'verbo', verbo, tiempo, suj, correcta, contexto: `${verbo} (${tiempo}, ${sujetosEs[suj]})` });
       } else {
         const [es, it] = todasPalabras[Math.floor(Math.random() * todasPalabras.length)];
@@ -301,9 +397,17 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       } else {
         let todasFormas = [];
-        for (let t of tiempos) {
-          for (let f of conjugaciones[p.verbo][t]) {
-            todasFormas.push(f);
+        if (verbosIrregulares[p.verbo]) {
+          for (let t of tiempos) {
+            for (let f of verbosIrregulares[p.verbo][t]) {
+              todasFormas.push(f);
+            }
+          }
+        } else {
+          for (let t of tiempos) {
+            for (let f of conjugaciones[p.verbo][t]) {
+              todasFormas.push(f);
+            }
           }
         }
         todasFormas = [...new Set(todasFormas)];
@@ -313,10 +417,16 @@ document.addEventListener('DOMContentLoaded', () => {
           if (!opciones.includes(candidato)) opciones.push(candidato);
         }
         while (opciones.length < 4) {
-          const otroVerbo = Object.keys(conjugaciones)[Math.floor(Math.random()*Object.keys(conjugaciones).length)];
+          const listaTotal = [...Object.keys(conjugaciones), ...Object.keys(verbosIrregulares)];
+          const otroVerbo = listaTotal[Math.floor(Math.random()*listaTotal.length)];
           const otroTiempo = tiempos[Math.floor(Math.random()*3)];
           const otroSuj = Math.floor(Math.random()*6);
-          const cand = conjugaciones[otroVerbo][otroTiempo][otroSuj];
+          let cand;
+          if (verbosIrregulares[otroVerbo]) {
+            cand = verbosIrregulares[otroVerbo][otroTiempo][otroSuj];
+          } else {
+            cand = conjugaciones[otroVerbo][otroTiempo][otroSuj];
+          }
           if (!opciones.includes(cand)) opciones.push(cand);
         }
         shuffle(opciones);
@@ -390,12 +500,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     document.getElementById('resultados-contenido').innerHTML = html + 
       '<button id="btn-volver-menu-resultados">Menú principal</button>';
-  }
-    // === Estado para coordinar pregunta/respuesta ===
-  let preguntaActual = null;
-  let modoActual = null;
-
-  // === FUNCIONES DE JUEGO ===
+            }
+    // === FUNCIONES DE JUEGO ===
   function volverMenuJuego() {
     if (temporizador) clearInterval(temporizador);
     modo = null;
@@ -439,7 +545,6 @@ document.addEventListener('DOMContentLoaded', () => {
       const repaso = repasos[0];
       const [es, it] = repaso.contexto.includes('->') ? repaso.contexto.split('->') : [repaso.contexto, repaso.palabra];
 
-      // Guardar estado actual
       preguntaActual = { tipo: 'vocabulario', es, it, contexto: repaso.contexto, correcta: it, esRepaso: true };
       modoActual = 'vocabulario';
 
@@ -485,7 +590,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const idx = Math.floor(Math.random() * vocab.length);
     const [es, it] = vocab[idx];
 
-    // Guardar estado actual
     preguntaActual = { tipo: 'vocabulario', es, it, contexto: es, correcta: it, esRepaso: false };
     modoActual = 'vocabulario';
 
@@ -530,9 +634,13 @@ document.addEventListener('DOMContentLoaded', () => {
       const tiempo = resto.split(', ')[0];
       const sujTexto = resto.split(', ')[1].slice(0, -1);
       const sujIdx = sujetosEs.indexOf(sujTexto);
-      const correcta = conjugaciones[verboPart][tiempo][sujIdx];
+      let correcta;
+      if (verbosIrregulares[verboPart]) {
+        correcta = verbosIrregulares[verboPart][tiempo][sujIdx];
+      } else {
+        correcta = conjugaciones[verboPart][tiempo][sujIdx];
+      }
 
-      // Guardar estado actual
       preguntaActual = { tipo: 'verbos', verbo: verboPart, tiempo, suj: sujIdx, contexto: repaso.contexto, correcta, esRepaso: true };
       modoActual = 'verbos';
 
@@ -544,9 +652,17 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('opciones').style.display = 'none';
       } else {
         let todasFormas = [];
-        for (let t of tiempos) {
-          for (let f of conjugaciones[verboPart][t]) {
-            todasFormas.push(f);
+        if (verbosIrregulares[verboPart]) {
+          for (let t of tiempos) {
+            for (let f of verbosIrregulares[verboPart][t]) {
+              todasFormas.push(f);
+            }
+          }
+        } else {
+          for (let t of tiempos) {
+            for (let f of conjugaciones[verboPart][t]) {
+              todasFormas.push(f);
+            }
           }
         }
         todasFormas = [...new Set(todasFormas)];
@@ -556,10 +672,16 @@ document.addEventListener('DOMContentLoaded', () => {
           if (!opciones.includes(candidato)) opciones.push(candidato);
         }
         while (opciones.length < 4) {
-          const otroVerbo = Object.keys(conjugaciones)[Math.floor(Math.random()*Object.keys(conjugaciones).length)];
+          const listaTotal = [...Object.keys(conjugaciones), ...Object.keys(verbosIrregulares)];
+          const otroVerbo = listaTotal[Math.floor(Math.random()*listaTotal.length)];
           const otroTiempo = tiempos[Math.floor(Math.random()*3)];
           const otroSuj = Math.floor(Math.random()*6);
-          const cand = conjugaciones[otroVerbo][otroTiempo][otroSuj];
+          let cand;
+          if (verbosIrregulares[otroVerbo]) {
+            cand = verbosIrregulares[otroVerbo][otroTiempo][otroSuj];
+          } else {
+            cand = conjugaciones[otroVerbo][otroTiempo][otroSuj];
+          }
           if (!opciones.includes(cand)) opciones.push(cand);
         }
         shuffle(opciones);
@@ -588,13 +710,23 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    const tipo = ["are","ere","ire"][Math.floor(Math.random()*3)];
-    const verbo = verbos[tipo][Math.floor(Math.random()*verbos[tipo].length)];
+    // Elegir aleatoriamente entre regulares e irregulares
+    const usarIrregular = Math.random() > 0.6; // 40% irregulares
+    let verbo, conjugacion;
+    if (usarIrregular) {
+      const irregularLista = Object.keys(verbosIrregulares);
+      verbo = irregularLista[Math.floor(Math.random() * irregularLista.length)];
+      conjugacion = verbosIrregulares[verbo];
+    } else {
+      const tipo = ["are","ere","ire"][Math.floor(Math.random()*3)];
+      verbo = verbos[tipo][Math.floor(Math.random()*verbos[tipo].length)];
+      conjugacion = conjugaciones[verbo];
+    }
+
     const tiempo = tiempos[Math.floor(Math.random()*3)];
     const suj = Math.floor(Math.random()*6);
-    const correcta = conjugaciones[verbo][tiempo][suj];
+    const correcta = conjugacion[tiempo][suj];
 
-    // Guardar estado actual
     preguntaActual = { tipo: 'verbos', verbo, tiempo, suj, contexto: `${verbo} (${tiempo}, ${sujetosEs[suj]})`, correcta, esRepaso: false };
     modoActual = 'verbos';
 
@@ -607,7 +739,7 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
       let todasFormas = [];
       for (let t of tiempos) {
-        for (let f of conjugaciones[verbo][t]) {
+        for (let f of conjugacion[t]) {
           todasFormas.push(f);
         }
       }
@@ -618,10 +750,16 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!opciones.includes(candidato)) opciones.push(candidato);
       }
       while (opciones.length < 4) {
-        const otroVerbo = Object.keys(conjugaciones)[Math.floor(Math.random()*Object.keys(conjugaciones).length)];
+        const listaTotal = [...Object.keys(conjugaciones), ...Object.keys(verbosIrregulares)];
+        const otroVerbo = listaTotal[Math.floor(Math.random()*listaTotal.length)];
         const otroTiempo = tiempos[Math.floor(Math.random()*3)];
         const otroSuj = Math.floor(Math.random()*6);
-        const cand = conjugaciones[otroVerbo][otroTiempo][otroSuj];
+        let cand;
+        if (verbosIrregulares[otroVerbo]) {
+          cand = verbosIrregulares[otroVerbo][otroTiempo][otroSuj];
+        } else {
+          cand = conjugaciones[otroVerbo][otroTiempo][otroSuj];
+        }
         if (!opciones.includes(cand)) opciones.push(cand);
       }
       shuffle(opciones);
@@ -682,7 +820,7 @@ document.addEventListener('DOMContentLoaded', () => {
     actualizarStats();
   }
 
-  // === Listener ÚNICO para el botón Enviar (clave) ===
+  // === Listener ÚNICO para el botón Enviar ===
   document.getElementById('btn-enviar')?.addEventListener('click', () => {
     if (!preguntaActual || !modoEscritura) return;
 
