@@ -338,8 +338,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     document.getElementById('resultados-contenido').innerHTML = html + 
       '<button onclick="document.getElementById(\'examen-resultados\').style.display=\'none\'; document.getElementById(\'menu-principal\').style.display=\'block\';">Menú principal</button>';
-}
-
+  }
   // === FUNCIONES EXISTENTES (vocabulario y verbos normales) ===
 
   function volverMenuJuego() {
@@ -359,7 +358,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function toggleModo() {
     if (examenActivo) return;
     modoEscritura = !modoEscritura;
-    const btn = document.querySelector('#juego button[onclick="toggleModo()"]');
+    const btn = document.getElementById('btn-toggle-modo');
     if (btn) {
       btn.textContent = modoEscritura ? '↔️ Cambiar a opción múltiple' : '↔️ Cambiar a modo escritura';
     }
@@ -755,7 +754,7 @@ document.addEventListener('DOMContentLoaded', () => {
     applyTheme(theme);
   }
 
-  // Registrar el listener del tema (esto sí funciona sin window)
+  // Registrar el listener del tema
   const themeToggle = document.getElementById('theme-toggle');
   if (themeToggle) {
     themeToggle.addEventListener('click', () => {
@@ -764,17 +763,49 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // === ✅ EXPONER FUNCIONES AL ÁMBITO GLOBAL (para onclick inline) ===
-  window.mostrarCategorias = mostrarCategorias;
-  window.iniciarVerbos = iniciarVerbos;
-  window.iniciarExamen = iniciarExamen;
-  window.configurarExamen = configurarExamen;
-  window.mostrarErrores = mostrarErrores;
-  window.reiniciarErrores = reiniciarErrores;
-  window.volverMenuJuego = volverMenuJuego;
-  window.toggleModo = toggleModo;
-  window.iniciarVocabulario = iniciarVocabulario;
-  window.verDetallesExamen = verDetallesExamen;
+  // === ✅ REGISTRO DE EVENT LISTENERS (reemplaza onclick) ===
+  document.getElementById('btn-categorias')?.addEventListener('click', mostrarCategorias);
+  document.getElementById('btn-verbos')?.addEventListener('click', iniciarVerbos);
+  document.getElementById('btn-examen')?.addEventListener('click', iniciarExamen);
+  document.getElementById('btn-errores')?.addEventListener('click', mostrarErrores);
+
+  document.getElementById('cat-todo')?.addEventListener('click', () => iniciarVocabulario('todo'));
+  document.getElementById('cat-basico')?.addEventListener('click', () => iniciarVocabulario('basico'));
+  document.getElementById('cat-comida')?.addEventListener('click', () => iniciarVocabulario('comida'));
+  document.getElementById('cat-viajes')?.addEventListener('click', () => iniciarVocabulario('viajes'));
+  document.getElementById('cat-familia')?.addEventListener('click', () => iniciarVocabulario('familia'));
+  document.getElementById('cat-casa')?.addEventListener('click', () => iniciarVocabulario('casa'));
+  document.getElementById('cat-verbos')?.addEventListener('click', () => iniciarVocabulario('verbos'));
+
+  document.getElementById('btn-volver-categorias')?.addEventListener('click', () => {
+    document.getElementById('categorias').style.display = 'none';
+    document.getElementById('menu-principal').style.display = 'block';
+  });
+
+  document.getElementById('ex-10')?.addEventListener('click', () => configurarExamen(10));
+  document.getElementById('ex-20')?.addEventListener('click', () => configurarExamen(20));
+  document.getElementById('ex-30')?.addEventListener('click', () => configurarExamen(30));
+  document.getElementById('ex-20-300')?.addEventListener('click', () => configurarExamen(20, 300));
+  document.getElementById('ex-30-600')?.addEventListener('click', () => configurarExamen(30, 600));
+
+  document.getElementById('btn-volver-examen')?.addEventListener('click', () => {
+    document.getElementById('examen-config').style.display = 'none';
+    document.getElementById('menu-principal').style.display = 'block';
+  });
+
+  document.getElementById('btn-toggle-modo')?.addEventListener('click', toggleModo);
+  document.getElementById('btn-volver-menu')?.addEventListener('click', volverMenuJuego);
+
+  document.getElementById('btn-reiniciar-errores')?.addEventListener('click', reiniciarErrores);
+  document.getElementById('btn-cerrar-errores')?.addEventListener('click', () => {
+    document.getElementById('errores').style.display = 'none';
+  });
+
+  document.getElementById('btn-ver-detalle')?.addEventListener('click', verDetallesExamen);
+  document.getElementById('btn-volver-menu-resultados')?.addEventListener('click', () => {
+    document.getElementById('examen-resultados').style.display = 'none';
+    document.getElementById('menu-principal').style.display = 'block';
+  });
 
   // === INICIAR ===
   initTheme();
