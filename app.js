@@ -338,8 +338,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     document.getElementById('resultados-contenido').innerHTML = html + 
       '<button onclick="document.getElementById(\'examen-resultados\').style.display=\'none\'; document.getElementById(\'menu-principal\').style.display=\'block\';">Menú principal</button>';
-}
-  // === FUNCIONES EXISTENTES (vocabulario y verbos normales) ===
+  }
+    // === FUNCIONES EXISTENTES (vocabulario y verbos normales) ===
   function volverMenuJuego() {
     if (temporizador) clearInterval(temporizador);
     modo = null;
@@ -367,17 +367,120 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  function iniciarVocabulario(categoria) {
-    modo = 'vocabulario';
-    categoriaActual = categoria;
-    statsSesion = { aciertos: 0, errores: 0 };
-    document.getElementById('categorias').style.display = 'none';
-    document.getElementById('juego').style.display = 'block';
-    actualizarStats();
-    mostrarPreguntaVocabulario();
+  // === SISTEMA DE REPASO (SRS) ===
+  function calcularProximoRepaso(nivel) {
+    const hoy = new Date();
+    if (nivel === 1) return hoy;
+    if (nivel === 2) {
+      hoy.setDate(hoy.getDate() + 3);
+      return hoy;
+    }
+    hoy.setDate(hoy.getDate() + 7);
+    return hoy;
+  }
+
+  function programarRepaso(palabra, contexto, tipo) {
+    const repasos = JSON.parse(localStorage.getItem('repasos_italiano')) || [];
+    // Evitar duplicados
+    const existe = repasos.find(r => r.contexto === contexto && r.tipo === tipo);
+    if (existe) return;
+
+    const nivel = 1;
+    const proximo = calcularProximoRepaso(nivel);
+    repasos.push({
+      palabra,
+      contexto,
+      tipo,
+      nivel,
+      proximoRepaso: proximo.toISOString().split('T')[0]
+    });
+    localStorage.setItem('repasos_italiano', JSON.stringify(repasos));
+  }
+
+  function obtenerRepasosPendientes() {
+    const hoy = new Date().toISOString().split('T')[0];
+    const repasos = JSON.parse(localStorage.getItem('repasos_italiano')) || [];
+    return repasos.filter(r => r.proximoRepaso <= hoy);
+  }
+
+  function eliminarRepaso(contexto) {
+    let repasos = JSON.parse(localStorage.getItem('repasos_italiano')) || [];
+    repasos = repasos.filter(r => r.contexto !== contexto);
+    localStorage.setItem('repasos_italiano', JSON.stringify(repasos));
+  }
+
+  function subirNivelRepaso(contexto) {
+    let repasos = JSON.parse(localStorage.getItem('repasos_italiano')) || [];
+    const item = repasos.find(r => r.contexto === contexto);
+    if (item && item.nivel < 3) {
+      item.nivel++;
+      item.proximoRepaso = calcularProximoRepaso(item.nivel).toISOString().split('T')[0];
+      localStorage.setItem('repasos_italiano', JSON.stringify(repasos));
+    } else {
+      eliminarRepaso(contexto);
+    }
   }
 
   function mostrarPreguntaVocabulario() {
+    const repasos = obtenerRepasosPendientes().filter(r => r.tipo === 'vocabulario');
+    if (repasos.length > 0) {
+      // Mostrar repaso
+      const repaso = repasos[0];
+      const [es, it] = repaso.contexto.includes('->') ? repaso.contexto.split('->') : [repaso.contexto, repaso.palabra];
+
+      if (modoEscritura) {
+        document.getElementById('pregunta').textContent = `🔁 REPASO: Escribe en italiano: "${es}"`;
+        document.getElementById('respuesta-escrita').value = '';
+        document.getElementById('btn-enviar').onclick = () => {
+          const respuesta = document.getElementById('respuesta-escrita').value.trim().toLowerCase();
+          if (respuesta === it.toLowerCase()) {
+            subirNivelRepaso(repaso.contexto);
+            statsSesion.aciertos++;
+            statsGlobal.aciertos++;
+            alert("✅ ¡Bien! Subes de nivel.");
+          } else {
+            programarRepaso(it, repaso.contexto, 'vocabulario'); // Reinicia nivel
+            statsSesion.errores++;
+            statsGlobal.errores++;
+            alert(`❌ Incorrecto.\nTú: ${respuesta}\nCorrecto: ${it}`);
+          }
+          guardarStats();
+          actualizarStats();
+          setTimeout(mostrarPreguntaVocabulario, 600);
+        };
+      } else {
+        let opciones = [it];
+        while (opciones.length < 4) {
+          const r = vocabularioPorCategoria.todo[Math.floor(Math.random() * vocabularioPorCategoria.todo.length)][1];
+          if (!opciones.includes(r)) opciones.push(r);
+        }
+        shuffle(opciones);
+        document.getElementById('pregunta').textContent = `🔁 REPASO: ¿Cómo se dice "${es}" en italiano?`;
+        for (let i = 0; i < 4; i++) {
+          document.getElementById(`opcion${i}`).textContent = opciones[i];
+          document.getElementById(`opcion${i}`).onclick = () => {
+            reproducir(opciones[i]);
+            if (opciones[i].toLowerCase() === it.toLowerCase()) {
+              subirNivelRepaso(repaso.contexto);
+              statsSesion.aciertos++;
+              statsGlobal.aciertos++;
+              alert("✅ ¡Bien! Subes de nivel.");
+            } else {
+              programarRepaso(it, repaso.contexto, 'vocabulario');
+              statsSesion.errores++;
+              statsGlobal.errores++;
+              alert(`❌ Incorrecto.\nTú: ${opciones[i]}\nCorrecto: ${it}`);
+            }
+            guardarStats();
+            actualizarStats();
+            setTimeout(mostrarPreguntaVocabulario, 600);
+          };
+        }
+      }
+      return;
+    }
+
+    // Si no hay repasos, vocabulario normal
     const vocab = vocabularioPorCategoria[categoriaActual];
     const idx = Math.floor(Math.random() * vocab.length);
     const [es, it] = vocab[idx];
@@ -405,16 +508,84 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  function iniciarVerbos() {
-    modo = 'verbos';
-    statsSesion = { aciertos: 0, errores: 0 };
-    document.getElementById('menu-principal').style.display = 'none';
-    document.getElementById('juego').style.display = 'block';
-    actualizarStats();
-    mostrarPreguntaVerbo();
-  }
-
   function mostrarPreguntaVerbo() {
+    const repasos = obtenerRepasosPendientes().filter(r => r.tipo === 'verbo');
+    if (repasos.length > 0) {
+      const repaso = repasos[0];
+      // Aquí asumimos que el contexto es como: "mangiare (presente, yo)"
+      const [verboPart, resto] = repaso.contexto.split(' (');
+      const tiempo = resto.split(', ')[0];
+      const sujTexto = resto.split(', ')[1].slice(0, -1); // quita el ')'
+      const sujIdx = sujetosEs.indexOf(sujTexto);
+      const correcta = conjugaciones[verboPart][tiempo][sujIdx];
+
+      if (modoEscritura) {
+        document.getElementById('pregunta').textContent = `🔁 REPASO: Escribe la forma correcta de "${verboPart}" en ${tiempo} para "${sujTexto}":`;
+        document.getElementById('respuesta-escrita').value = '';
+        document.getElementById('btn-enviar').onclick = () => {
+          const respuesta = document.getElementById('respuesta-escrita').value.trim().toLowerCase();
+          if (respuesta === correcta.toLowerCase()) {
+            subirNivelRepaso(repaso.contexto);
+            statsSesion.aciertos++;
+            statsGlobal.aciertos++;
+            alert("✅ ¡Bien! Subes de nivel.");
+          } else {
+            programarRepaso(correcta, repaso.contexto, 'verbo');
+            statsSesion.errores++;
+            statsGlobal.errores++;
+            alert(`❌ Incorrecto.\nTú: ${respuesta}\nCorrecto: ${correcta}`);
+          }
+          guardarStats();
+          actualizarStats();
+          setTimeout(mostrarPreguntaVerbo, 600);
+        };
+      } else {
+        let todasFormas = [];
+        for (let t of tiempos) {
+          for (let f of conjugaciones[verboPart][t]) {
+            todasFormas.push(f);
+          }
+        }
+        todasFormas = [...new Set(todasFormas)];
+        let opciones = [correcta];
+        while (opciones.length < 4 && opciones.length < todasFormas.length) {
+          const candidato = todasFormas[Math.floor(Math.random() * todasFormas.length)];
+          if (!opciones.includes(candidato)) opciones.push(candidato);
+        }
+        while (opciones.length < 4) {
+          const otroVerbo = Object.keys(conjugaciones)[Math.floor(Math.random()*Object.keys(conjugaciones).length)];
+          const otroTiempo = tiempos[Math.floor(Math.random()*3)];
+          const otroSuj = Math.floor(Math.random()*6);
+          const cand = conjugaciones[otroVerbo][otroTiempo][otroSuj];
+          if (!opciones.includes(cand)) opciones.push(cand);
+        }
+        shuffle(opciones);
+        document.getElementById('pregunta').textContent = `🔁 REPASO: ¿"${verboPart}" en ${tiempo} para "${sujTexto}"?`;
+        for (let i = 0; i < 4; i++) {
+          document.getElementById(`opcion${i}`).textContent = opciones[i];
+          document.getElementById(`opcion${i}`).onclick = () => {
+            reproducir(opciones[i]);
+            if (opciones[i].toLowerCase() === correcta.toLowerCase()) {
+              subirNivelRepaso(repaso.contexto);
+              statsSesion.aciertos++;
+              statsGlobal.aciertos++;
+              alert("✅ ¡Bien! Subes de nivel.");
+            } else {
+              programarRepaso(correcta, repaso.contexto, 'verbo');
+              statsSesion.errores++;
+              statsGlobal.errores++;
+              alert(`❌ Incorrecto.\nTú: ${opciones[i]}\nCorrecto: ${correcta}`);
+            }
+            guardarStats();
+            actualizarStats();
+            setTimeout(mostrarPreguntaVerbo, 600);
+          };
+        }
+      }
+      return;
+    }
+
+    // Verbos normales
     const tipo = ["are","ere","ire"][Math.floor(Math.random()*3)];
     const verbo = verbos[tipo][Math.floor(Math.random()*verbos[tipo].length)];
     const tiempo = tiempos[Math.floor(Math.random()*3)];
@@ -470,6 +641,7 @@ document.addEventListener('DOMContentLoaded', () => {
       statsSesion.errores++;
       statsGlobal.errores++;
       errores.push({tipo, contexto, dada: respuesta, correcta});
+      programarRepaso(correcta, contexto, tipo);
       alert(`❌ Incorrecto.\nTú: ${respuesta}\nCorrecto: ${correcta}`);
     }
     guardarStats();
@@ -482,6 +654,23 @@ document.addEventListener('DOMContentLoaded', () => {
         mostrarPreguntaVerbo();
       }
     }, 600);
+  }
+
+  function procesarRespuestaExamen(respuesta, correcta, contexto, tipo) {
+    const esCorrecta = respuesta === correcta;
+    resultadosExamen.push({ contexto, dada: respuesta, correcta, esCorrecta });
+
+    if (esCorrecta) {
+      statsGlobal.aciertos++;
+    } else {
+      statsGlobal.errores++;
+      errores.push({ tipo, contexto, dada: respuesta, correcta });
+      // En modo examen, NO programar repaso (solo en práctica)
+    }
+
+    guardarStats();
+    indiceExamen++;
+    setTimeout(mostrarSiguientePreguntaExamen, 600);
   }
 
   function mostrarErrores() {
@@ -503,6 +692,7 @@ document.addEventListener('DOMContentLoaded', () => {
     errores = [];
     statsGlobal = { aciertos: 0, errores: 0 };
     localStorage.removeItem('examenes_italiano');
+    localStorage.removeItem('repasos_italiano'); // también resetea SRS
     guardarStats();
     const erroresLista = document.getElementById("errores-lista");
     if (erroresLista) {
