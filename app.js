@@ -1,3 +1,4 @@
+
 document.addEventListener('DOMContentLoaded', () => {
 
   // === AUDIO ===
@@ -138,8 +139,60 @@ document.addEventListener('DOMContentLoaded', () => {
       [a[i], a[j]] = [a[j], a[i]];
     }
   }
+    // === SISTEMA DE REPASO (SRS) ===
+  function calcularProximoRepaso(nivel) {
+    const hoy = new Date();
+    if (nivel === 1) return hoy;
+    if (nivel === 2) {
+      hoy.setDate(hoy.getDate() + 3);
+      return hoy;
+    }
+    hoy.setDate(hoy.getDate() + 7);
+    return hoy;
+  }
 
-  // === MENÚS ===
+  function programarRepaso(palabra, contexto, tipo) {
+    const repasos = JSON.parse(localStorage.getItem('repasos_italiano')) || [];
+    const existe = repasos.find(r => r.contexto === contexto && r.tipo === tipo);
+    if (existe) return;
+
+    const nivel = 1;
+    const proximo = calcularProximoRepaso(nivel);
+    repasos.push({
+      palabra,
+      contexto,
+      tipo,
+      nivel,
+      proximoRepaso: proximo.toISOString().split('T')[0]
+    });
+    localStorage.setItem('repasos_italiano', JSON.stringify(repasos));
+  }
+
+  function obtenerRepasosPendientes() {
+    const hoy = new Date().toISOString().split('T')[0];
+    const repasos = JSON.parse(localStorage.getItem('repasos_italiano')) || [];
+    return repasos.filter(r => r.proximoRepaso <= hoy);
+  }
+
+  function eliminarRepaso(contexto) {
+    let repasos = JSON.parse(localStorage.getItem('repasos_italiano')) || [];
+    repasos = repasos.filter(r => r.contexto !== contexto);
+    localStorage.setItem('repasos_italiano', JSON.stringify(repasos));
+  }
+
+  function subirNivelRepaso(contexto) {
+    let repasos = JSON.parse(localStorage.getItem('repasos_italiano')) || [];
+    const item = repasos.find(r => r.contexto === contexto);
+    if (item && item.nivel < 3) {
+      item.nivel++;
+      item.proximoRepaso = calcularProximoRepaso(item.nivel).toISOString().split('T')[0];
+      localStorage.setItem('repasos_italiano', JSON.stringify(repasos));
+    } else {
+      eliminarRepaso(contexto);
+    }
+  }
+
+  // === MENÚS Y EXAMEN ===
   function mostrarCategorias() {
     document.getElementById('menu-principal').style.display = 'none';
     document.getElementById('categorias').style.display = 'block';
@@ -338,61 +391,10 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     document.getElementById('resultados-contenido').innerHTML = html + 
       '<button id="btn-volver-menu-resultados">Menú principal</button>';
-      }
-    // === SISTEMA DE REPASO (SRS) ===
-  function calcularProximoRepaso(nivel) {
-    const hoy = new Date();
-    if (nivel === 1) return hoy;
-    if (nivel === 2) {
-      hoy.setDate(hoy.getDate() + 3);
-      return hoy;
-    }
-    hoy.setDate(hoy.getDate() + 7);
-    return hoy;
   }
 
-  function programarRepaso(palabra, contexto, tipo) {
-    const repasos = JSON.parse(localStorage.getItem('repasos_italiano')) || [];
-    const existe = repasos.find(r => r.contexto === contexto && r.tipo === tipo);
-    if (existe) return;
 
-    const nivel = 1;
-    const proximo = calcularProximoRepaso(nivel);
-    repasos.push({
-      palabra,
-      contexto,
-      tipo,
-      nivel,
-      proximoRepaso: proximo.toISOString().split('T')[0]
-    });
-    localStorage.setItem('repasos_italiano', JSON.stringify(repasos));
-  }
-
-  function obtenerRepasosPendientes() {
-    const hoy = new Date().toISOString().split('T')[0];
-    const repasos = JSON.parse(localStorage.getItem('repasos_italiano')) || [];
-    return repasos.filter(r => r.proximoRepaso <= hoy);
-  }
-
-  function eliminarRepaso(contexto) {
-    let repasos = JSON.parse(localStorage.getItem('repasos_italiano')) || [];
-    repasos = repasos.filter(r => r.contexto !== contexto);
-    localStorage.setItem('repasos_italiano', JSON.stringify(repasos));
-  }
-
-  function subirNivelRepaso(contexto) {
-    let repasos = JSON.parse(localStorage.getItem('repasos_italiano')) || [];
-    const item = repasos.find(r => r.contexto === contexto);
-    if (item && item.nivel < 3) {
-      item.nivel++;
-      item.proximoRepaso = calcularProximoRepaso(item.nivel).toISOString().split('T')[0];
-      localStorage.setItem('repasos_italiano', JSON.stringify(repasos));
-    } else {
-      eliminarRepaso(contexto);
-    }
-  }
-
-  // === FUNCIONES PRINCIPALES ===
+    // === FUNCIONES DE JUEGO ===
   function volverMenuJuego() {
     if (temporizador) clearInterval(temporizador);
     modo = null;
