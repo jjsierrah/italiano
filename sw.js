@@ -1,4 +1,4 @@
-const CACHE_NAME = 'italiano-app';
+const CACHE_NAME = 'italiano-app-v02';
 const urlsToCache = [
   'index.html',
   'manifest.json',
