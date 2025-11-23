@@ -3,20 +3,84 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Italiano</title>
+  <title>JJ Italiano App</title>
   <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#6a1b9a">
+  <link rel="icon" type="image/png" href="icon-192-ita.png">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <button id="theme-toggle" aria-label="Cambiar tema">🌓</button>
+
   <div class="card">
-    <h1>Prueba</h1>
-    <button id="btn-test">Botón de prueba</button>
+    <h1>🇮🇹 Italiano en Acción</h1>
+
+    <div id="menu-principal">
+      <button id="btn-categorias">📚 Vocabulario por Categorías</button>
+      <button id="btn-verbos">📝 Practicar Verbos</button>
+      <button id="btn-examen" class="examen-btn">🎓 Modo Examen</button>
+      <div class="stats" id="stats-global"></div>
+      <button id="btn-errores">❗ Mis Errores</button>
+    </div>
+
+    <div id="categorias" style="display:none;">
+      <h2>Elige una categoría</h2>
+      <button class="categoria-btn" id="cat-todo">Todas las palabras</button>
+      <button class="categoria-btn" id="cat-basico">Básico</button>
+      <button class="categoria-btn" id="cat-comida">Comida</button>
+      <button class="categoria-btn" id="cat-viajes">Viajes</button>
+      <button class="categoria-btn" id="cat-familia">Familia</button>
+      <button class="categoria-btn" id="cat-casa">Casa</button>
+      <button class="categoria-btn" id="cat-verbos">Verbos</button>
+      <button id="btn-volver-categorias">🔙 Volver</button>
+    </div>
+
+    <div id="examen-config" style="display:none;">
+      <h2>Configurar Examen</h2>
+      <p><strong>Número de preguntas:</strong></p>
+      <button id="ex-10">10 preguntas</button>
+      <button id="ex-20">20 preguntas</button>
+      <button id="ex-30">30 preguntas</button>
+      <p><strong>Tiempo límite (opcional):</strong></p>
+      <button id="ex-20-300">5 min (20 preguntas)</button>
+      <button id="ex-30-600">10 min (30 preguntas)</button>
+      <button id="btn-volver-examen">🔙 Volver</button>
+    </div>
+
+    <div id="juego" style="display:none;">
+      <div class="stats" id="stats-sesion">Pregunta: 1/20</div>
+      <div class="examen-timer" id="examen-timer" style="display:none;"></div>
+      <h2 id="pregunta">¿Cómo se dice...?</h2>
+      
+      <div id="opciones">
+        <div class="opcion" id="opcion0"></div>
+        <div class="opcion" id="opcion1"></div>
+        <div class="opcion" id="opcion2"></div>
+        <div class="opcion" id="opcion3"></div>
+      </div>
+      
+      <input type="text" id="respuesta-escrita" placeholder="Escribe tu respuesta..." style="display:none;">
+      <button id="btn-enviar" style="display:none;">✅ Enviar</button>
+      
+      <button id="btn-toggle-modo">↔️ Cambiar modo</button>
+      <button id="btn-volver-menu">🔙 Menú</button>
+    </div>
   </div>
 
-  <script>
-    document.getElementById('btn-test').addEventListener('click', () => {
-      alert('¡Funciona!');
-    });
-  </script>
+  <div class="card" id="errores" style="display:none;">
+    <h2>❌ Mis Errores</h2>
+    <div id="errores-lista"></div>
+    <button id="btn-reiniciar-errores">🗑️ Limpiar errores</button>
+    <button id="btn-cerrar-errores">Cerrar</button>
+  </div>
+
+  <div class="card" id="examen-resultados" style="display:none;">
+    <h2>🎓 Resultados del Examen</h2>
+    <div id="resultados-contenido"></div>
+    <button id="btn-ver-detalle">🔍 Ver respuestas</button>
+    <button id="btn-volver-menu-resultados">Menú principal</button>
+  </div>
+
+  <script src="app.js"></script>
 </body>
 </html>
