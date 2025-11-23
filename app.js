@@ -1,4 +1,3 @@
-
 document.addEventListener('DOMContentLoaded', () => {
 
   // === AUDIO ===
@@ -392,8 +391,6 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('resultados-contenido').innerHTML = html + 
       '<button id="btn-volver-menu-resultados">Menú principal</button>';
   }
-
-
     // === FUNCIONES DE JUEGO ===
   function volverMenuJuego() {
     if (temporizador) clearInterval(temporizador);
