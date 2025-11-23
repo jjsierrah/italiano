@@ -1,4 +1,4 @@
-const CACHE_NAME = 'italiano-app-v02';
+const CACHE_NAME = 'jj-impara-italiano-v02';
 const urlsToCache = [
   'index.html',
   'manifest.json',
