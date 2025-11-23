@@ -391,7 +391,11 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('resultados-contenido').innerHTML = html + 
       '<button id="btn-volver-menu-resultados">Menú principal</button>';
   }
-    // === FUNCIONES DE JUEGO ===
+    // === Estado para coordinar pregunta/respuesta ===
+  let preguntaActual = null;
+  let modoActual = null;
+
+  // === FUNCIONES DE JUEGO ===
   function volverMenuJuego() {
     if (temporizador) clearInterval(temporizador);
     modo = null;
@@ -435,26 +439,16 @@ document.addEventListener('DOMContentLoaded', () => {
       const repaso = repasos[0];
       const [es, it] = repaso.contexto.includes('->') ? repaso.contexto.split('->') : [repaso.contexto, repaso.palabra];
 
+      // Guardar estado actual
+      preguntaActual = { tipo: 'vocabulario', es, it, contexto: repaso.contexto, correcta: it, esRepaso: true };
+      modoActual = 'vocabulario';
+
       if (modoEscritura) {
         document.getElementById('pregunta').textContent = `🔁 REPASO: Escribe en italiano: "${es}"`;
         document.getElementById('respuesta-escrita').value = '';
-        document.getElementById('btn-enviar').onclick = () => {
-          const respuesta = document.getElementById('respuesta-escrita').value.trim().toLowerCase();
-          if (respuesta === it.toLowerCase()) {
-            subirNivelRepaso(repaso.contexto);
-            statsSesion.aciertos++;
-            statsGlobal.aciertos++;
-            alert("✅ ¡Bien! Subes de nivel.");
-          } else {
-            programarRepaso(it, repaso.contexto, 'vocabulario');
-            statsSesion.errores++;
-            statsGlobal.errores++;
-            alert(`❌ Incorrecto.\nTú: ${respuesta}\nCorrecto: ${it}`);
-          }
-          guardarStats();
-          actualizarStats();
-          setTimeout(mostrarPreguntaVocabulario, 600);
-        };
+        document.getElementById('respuesta-escrita').style.display = 'block';
+        document.getElementById('btn-enviar').style.display = 'block';
+        document.getElementById('opciones').style.display = 'none';
       } else {
         let opciones = [it];
         while (opciones.length < 4) {
@@ -491,25 +485,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const idx = Math.floor(Math.random() * vocab.length);
     const [es, it] = vocab[idx];
 
+    // Guardar estado actual
+    preguntaActual = { tipo: 'vocabulario', es, it, contexto: es, correcta: it, esRepaso: false };
+    modoActual = 'vocabulario';
+
     if (modoEscritura) {
       document.getElementById('pregunta').textContent = `Escribe en italiano: "${es}"`;
       document.getElementById('respuesta-escrita').value = '';
-      document.getElementById('btn-enviar').onclick = () => {
-        const respuesta = document.getElementById('respuesta-escrita').value.trim().toLowerCase();
-        if (respuesta === it.toLowerCase()) {
-          statsSesion.aciertos++;
-          statsGlobal.aciertos++;
-          alert("¡Correcto! ✅");
-        } else {
-          programarRepaso(it, es, 'vocabulario');
-          statsSesion.errores++;
-          statsGlobal.errores++;
-          alert(`❌ Incorrecto.\nTú: ${respuesta}\nCorrecto: ${it}`);
-        }
-        guardarStats();
-        actualizarStats();
-        setTimeout(mostrarPreguntaVocabulario, 600);
-      };
+      document.getElementById('respuesta-escrita').style.display = 'block';
+      document.getElementById('btn-enviar').style.display = 'block';
+      document.getElementById('opciones').style.display = 'none';
     } else {
       let opciones = [it];
       while (opciones.length < 4) {
@@ -547,26 +532,16 @@ document.addEventListener('DOMContentLoaded', () => {
       const sujIdx = sujetosEs.indexOf(sujTexto);
       const correcta = conjugaciones[verboPart][tiempo][sujIdx];
 
+      // Guardar estado actual
+      preguntaActual = { tipo: 'verbos', verbo: verboPart, tiempo, suj: sujIdx, contexto: repaso.contexto, correcta, esRepaso: true };
+      modoActual = 'verbos';
+
       if (modoEscritura) {
         document.getElementById('pregunta').textContent = `🔁 REPASO: Escribe la forma correcta de "${verboPart}" en ${tiempo} para "${sujTexto}":`;
         document.getElementById('respuesta-escrita').value = '';
-        document.getElementById('btn-enviar').onclick = () => {
-          const respuesta = document.getElementById('respuesta-escrita').value.trim().toLowerCase();
-          if (respuesta === correcta.toLowerCase()) {
-            subirNivelRepaso(repaso.contexto);
-            statsSesion.aciertos++;
-            statsGlobal.aciertos++;
-            alert("✅ ¡Bien! Subes de nivel.");
-          } else {
-            programarRepaso(correcta, repaso.contexto, 'verbo');
-            statsSesion.errores++;
-            statsGlobal.errores++;
-            alert(`❌ Incorrecto.\nTú: ${respuesta}\nCorrecto: ${correcta}`);
-          }
-          guardarStats();
-          actualizarStats();
-          setTimeout(mostrarPreguntaVerbo, 600);
-        };
+        document.getElementById('respuesta-escrita').style.display = 'block';
+        document.getElementById('btn-enviar').style.display = 'block';
+        document.getElementById('opciones').style.display = 'none';
       } else {
         let todasFormas = [];
         for (let t of tiempos) {
@@ -619,25 +594,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const suj = Math.floor(Math.random()*6);
     const correcta = conjugaciones[verbo][tiempo][suj];
 
+    // Guardar estado actual
+    preguntaActual = { tipo: 'verbos', verbo, tiempo, suj, contexto: `${verbo} (${tiempo}, ${sujetosEs[suj]})`, correcta, esRepaso: false };
+    modoActual = 'verbos';
+
     if (modoEscritura) {
       document.getElementById('pregunta').textContent = `Escribe la forma correcta de "${verbo}" en ${tiempo} para "${sujetosEs[suj]}":`;
       document.getElementById('respuesta-escrita').value = '';
-      document.getElementById('btn-enviar').onclick = () => {
-        const respuesta = document.getElementById('respuesta-escrita').value.trim().toLowerCase();
-        if (respuesta === correcta.toLowerCase()) {
-          statsSesion.aciertos++;
-          statsGlobal.aciertos++;
-          alert("¡Correcto! ✅");
-        } else {
-          programarRepaso(correcta, `${verbo} (${tiempo}, ${sujetosEs[suj]})`, 'verbos');
-          statsSesion.errores++;
-          statsGlobal.errores++;
-          alert(`❌ Incorrecto.\nTú: ${respuesta}\nCorrecto: ${correcta}`);
-        }
-        guardarStats();
-        actualizarStats();
-        setTimeout(mostrarPreguntaVerbo, 600);
-      };
+      document.getElementById('respuesta-escrita').style.display = 'block';
+      document.getElementById('btn-enviar').style.display = 'block';
+      document.getElementById('opciones').style.display = 'none';
     } else {
       let todasFormas = [];
       for (let t of tiempos) {
@@ -715,6 +681,55 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById("errores-lista").innerHTML = "<p>Errores y estadísticas reiniciados.</p>";
     actualizarStats();
   }
+
+  // === Listener ÚNICO para el botón Enviar (clave) ===
+  document.getElementById('btn-enviar')?.addEventListener('click', () => {
+    if (!preguntaActual || !modoEscritura) return;
+
+    const respuestaEl = document.getElementById('respuesta-escrita');
+    if (!respuestaEl) return;
+
+    const respuesta = respuestaEl.value.trim().toLowerCase();
+    const correcta = preguntaActual.correcta.toLowerCase();
+
+    if (respuesta === correcta) {
+      statsSesion.aciertos++;
+      statsGlobal.aciertos++;
+      if (preguntaActual.esRepaso) {
+        subirNivelRepaso(preguntaActual.contexto);
+        alert("✅ ¡Bien! Subes de nivel.");
+      } else {
+        alert("¡Correcto! ✅");
+      }
+    } else {
+      statsSesion.errores++;
+      statsGlobal.errores++;
+      errores.push({
+        tipo: preguntaActual.tipo,
+        contexto: preguntaActual.contexto,
+        dada: respuesta,
+        correcta: preguntaActual.correcta
+      });
+      if (preguntaActual.esRepaso) {
+        programarRepaso(preguntaActual.correcta, preguntaActual.contexto, preguntaActual.tipo);
+        alert(`❌ Incorrecto.\nTú: ${respuesta}\nCorrecto: ${preguntaActual.correcta}`);
+      } else {
+        programarRepaso(preguntaActual.correcta, preguntaActual.contexto, preguntaActual.tipo);
+        alert(`❌ Incorrecto.\nTú: ${respuesta}\nCorrecto: ${preguntaActual.correcta}`);
+      }
+    }
+
+    guardarStats();
+    actualizarStats();
+
+    setTimeout(() => {
+      if (modoActual === 'vocabulario') {
+        mostrarPreguntaVocabulario();
+      } else if (modoActual === 'verbos') {
+        mostrarPreguntaVerbo();
+      }
+    }, 600);
+  });
 
   // === Modo claro/oscuro ===
   function applyTheme(theme) {
