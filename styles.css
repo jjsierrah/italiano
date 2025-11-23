@@ -63,11 +63,13 @@ h2 {
   font-size: 1.4em;
 }
 
+/* === BOTONES Y OPCIONES (ancho ajustado) === */
 button, .opcion {
   display: block;
-  width: 100%;
+  width: 90%;
+  max-width: 400px;
+  margin: 8px auto;
   padding: 14px;
-  margin: 8px 0;
   border: none;
   border-radius: 12px;
   font-size: 1.1em;
@@ -124,13 +126,15 @@ hr {
   margin: 12px 0;
 }
 
-input#respuesta-escrita {
-  width: 100%;
+/* === Campo de texto en modo escritura === */
+#respuesta-escrita {
+  width: 90%;
+  max-width: 400px;
   padding: 14px;
   font-size: 1.2em;
   border: 2px solid var(--border-color);
   border-radius: 12px;
-  margin: 10px 0;
+  margin: 10px auto;
   text-align: center;
   background: var(--card-bg);
   color: var(--text-primary);
