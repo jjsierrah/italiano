@@ -212,7 +212,7 @@ const vocabularioPorCategoria = {
   }
   generarConjugaciones();
 
-  // === VERBOS IRREGULARES ===
+  // === VERBOS IRREGULARES AMPLIADOS (30 esenciales) ===
   const verbosIrregulares = {
     andare: {
       presente: ["vado", "vai", "va", "andiamo", "andate", "vanno"],
@@ -288,6 +288,77 @@ const vocabularioPorCategoria = {
       presente: ["leggo", "leggi", "legge", "leggiamo", "leggete", "leggono"],
       passato: ["ho letto", "hai letto", "ha letto", "abbiamo letto", "avete letto", "hanno letto"],
       futuro: ["leggerò", "leggerai", "leggerà", "leggeremo", "leggerete", "leggeranno"]
+    },
+    // 🔹 NUEVOS VERBOS IRREGULARES 🔹
+    mettere: {
+      presente: ["metto", "metti", "mette", "mettiamo", "mettete", "mettono"],
+      passato: ["ho messo", "hai messo", "ha messo", "abbiamo messo", "avete messo", "hanno messo"],
+      futuro: ["metterò", "metterai", "metterà", "metteremo", "metterete", "metteranno"]
+    },
+    prendere: {
+      presente: ["prendo", "prendi", "prende", "prendiamo", "prendete", "prendono"],
+      passato: ["ho preso", "hai preso", "ha preso", "abbiamo preso", "avete preso", "hanno preso"],
+      futuro: ["prenderò", "prenderai", "prenderà", "prenderemo", "prenderete", "prenderanno"]
+    },
+    rimanere: {
+      presente: ["rimango", "rimani", "rimane", "rimaniamo", "rimanete", "rimangono"],
+      passato: ["sono rimasto", "sei rimasto", "è rimasto", "siamo rimasti", "siete rimasti", "sono rimasti"],
+      futuro: ["rimarrò", "rimarrai", "rimarrà", "rimarremo", "rimarrete", "rimarranno"]
+    },
+    tenere: {
+      presente: ["tengo", "tieni", "tiene", "teniamo", "tenete", "tengono"],
+      passato: ["ho tenuto", "hai tenuto", "ha tenuto", "abbiamo tenuto", "avete tenuto", "hanno tenuto"],
+      futuro: ["terrò", "terrai", "terrà", "terremo", "terrete", "terranno"]
+    },
+    vincere: {
+      presente: ["vinco", "vinci", "vince", "vinciamo", "vincete", "vincono"],
+      passato: ["ho vinto", "hai vinto", "ha vinto", "abbiamo vinto", "avete vinto", "hanno vinto"],
+      futuro: ["vincerò", "vincerai", "vincerà", "vinceremo", "vincerete", "vinceranno"]
+    },
+    piacere: {
+      presente: ["piaccio", "piaci", "piace", "piacciamo", "piacete", "piacciono"],
+      passato: ["sono piaciuto", "sei piaciuto", "è piaciuto", "siamo piaciuti", "siete piaciuti", "sono piaciuti"],
+      futuro: ["piacerò", "piacerai", "piacerà", "piaceremo", "piacerete", "piaceranno"]
+    },
+    morire: {
+      presente: ["muoio", "muori", "muore", "moriamo", "morite", "muoiono"],
+      passato: ["sono morto", "sei morto", "è morto", "siamo morti", "siete morti", "sono morti"],
+      futuro: ["morirò", "morirai", "morirà", "moriremo", "morirete", "moriranno"]
+    },
+    nascere: {
+      presente: ["nasco", "nasci", "nasce", "nasciamo", "nascite", "nascono"],
+      passato: ["sono nato", "sei nato", "è nato", "siamo nati", "siete nati", "sono nati"],
+      futuro: ["nascerò", "nascerai", "nascerà", "nasceremo", "nascerete", "nasceranno"]
+    },
+    aprire: {
+      presente: ["apro", "apri", "apre", "apriamo", "aprite", "aprono"],
+      passato: ["ho aperto", "hai aperto", "ha aperto", "abbiamo aperto", "avete aperto", "hanno aperto"],
+      futuro: ["aprirò", "aprirai", "aprirà", "apriremo", "aprirete", "apriranno"]
+    },
+    offrire: {
+      presente: ["offro", "offri", "offre", "offriamo", "offrite", "offrono"],
+      passato: ["ho offerto", "hai offerto", "ha offerto", "abbiamo offerto", "avete offerto", "hanno offerto"],
+      futuro: ["offrirò", "offrirai", "offrirà", "offriremo", "offrirete", "offriranno"]
+    },
+    chiudere: {
+      presente: ["chiudo", "chiudi", "chiude", "chiudiamo", "chiudete", "chiudono"],
+      passato: ["ho chiuso", "hai chiuso", "ha chiuso", "abbiamo chiuso", "avete chiuso", "hanno chiuso"],
+      futuro: ["chiuderò", "chiuderai", "chiuderà", "chiuderemo", "chiuderete", "chiuderanno"]
+    },
+    scrivere: {
+      presente: ["scrivo", "scrivi", "scrive", "scriviamo", "scrivete", "scrivono"],
+      passato: ["ho scritto", "hai scritto", "ha scritto", "abbiamo scritto", "avete scritto", "hanno scritto"],
+      futuro: ["scriverò", "scriverai", "scriverà", "scriveremo", "scriverete", "scriveranno"]
+    },
+    rompere: {
+      presente: ["rompo", "rompi", "rompe", "rompiamo", "rompete", "rompono"],
+      passato: ["ho rotto", "hai rotto", "ha rotto", "abbiamo rotto", "avete rotto", "hanno rotto"],
+      futuro: ["romperò", "romperai", "romperà", "romperemo", "romperete", "romperanno"]
+    },
+    vivere: {
+      presente: ["vivo", "vivi", "vive", "viviamo", "vivete", "vivono"],
+      passato: ["ho vissuto", "hai vissuto", "ha vissuto", "abbiamo vissuto", "avete vissuto", "hanno vissuto"],
+      futuro: ["vivrò", "vivrai", "vivrà", "vivreemo", "vivrete", "vivranno"]
     }
   };
 
