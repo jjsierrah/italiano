@@ -466,25 +466,52 @@ document.addEventListener('DOMContentLoaded', () => {
     const total = resultadosExamen.length;
     const porcentaje = Math.round((aciertos / total) * 100);
 
-    const historial = JSON.parse(localStorage.getItem('examenes_italiano')) || [];
-    historial.push({
-      fecha: new Date().toLocaleString(),
-      preguntas: total,
-      aciertos,
-      porcentaje
-    });
-    localStorage.setItem('examenes_italiano', JSON.stringify(historial));
+    if (modo === 'desafio') {
+      const hoy = new Date().toISOString().split('T')[0];
+      localStorage.setItem('desafio_italiano', JSON.stringify({
+        fecha: hoy,
+        completado: true,
+        aciertos,
+        total,
+        porcentaje
+      }));
+      statsGlobal.aciertos += aciertos;
+      statsGlobal.errores += (total - aciertos);
+      guardarStats();
+    } else {
+      const historial = JSON.parse(localStorage.getItem('examenes_italiano')) || [];
+      historial.push({
+        fecha: new Date().toLocaleString(),
+        preguntas: total,
+        aciertos,
+        porcentaje
+      });
+      localStorage.setItem('examenes_italiano', JSON.stringify(historial));
+    }
 
     document.getElementById('juego').style.display = 'none';
     document.getElementById('examen-resultados').style.display = 'block';
-    document.getElementById('resultados-contenido').innerHTML = `
-      <p><strong>Preguntas:</strong> ${total}</p>
-      <p><strong>Aciertos:</strong> ${aciertos}</p>
-      <p><strong>Porcentaje:</strong> ${porcentaje}%</p>
-      <p style="color:${porcentaje >= 80 ? 'green' : porcentaje >= 60 ? 'orange' : 'red'};">
-        <strong>${porcentaje >= 80 ? '¡Excelente!' : porcentaje >= 60 ? 'Bien hecho' : 'Sigue practicando'}</strong>
-      </p>
-    `;
+    
+    if (modo === 'desafio') {
+      document.getElementById('resultados-contenido').innerHTML = `
+        <p>🎯 <strong>Desafío Diario Completado</strong></p>
+        <p><strong>Aciertos:</strong> ${aciertos}/${total}</p>
+        <p><strong>Porcentaje:</strong> ${porcentaje}%</p>
+        <p style="color:${porcentaje >= 80 ? 'green' : porcentaje >= 60 ? 'orange' : 'red'};">
+          <strong>${porcentaje >= 80 ? '¡Excelente! 🏅' : porcentaje >= 60 ? 'Bien hecho' : 'Sigue practicando'}</strong>
+        </p>
+        <p>¡Vuelve mañana para un nuevo desafío!</p>
+      `;
+    } else {
+      document.getElementById('resultados-contenido').innerHTML = `
+        <p><strong>Preguntas:</strong> ${total}</p>
+        <p><strong>Aciertos:</strong> ${aciertos}</p>
+        <p><strong>Porcentaje:</strong> ${porcentaje}%</p>
+        <p style="color:${porcentaje >= 80 ? 'green' : porcentaje >= 60 ? 'orange' : 'red'};">
+          <strong>${porcentaje >= 80 ? '¡Excelente!' : porcentaje >= 60 ? 'Bien hecho' : 'Sigue practicando'}</strong>
+        </p>
+      `;
+    }
   }
 
   function verDetallesExamen() {
@@ -500,7 +527,54 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     document.getElementById('resultados-contenido').innerHTML = html + 
       '<button id="btn-volver-menu-resultados">Menú principal</button>';
-            }
+  }
+
+  function iniciarDesafioDiario() {
+    const hoy = new Date().toISOString().split('T')[0];
+    const desafio = JSON.parse(localStorage.getItem('desafio_italiano')) || { fecha: '', completado: false };
+
+    if (desafio.fecha === hoy && desafio.completado) {
+      alert("🎉 ¡Ya completaste el desafío de hoy! Vuelve mañana.");
+      return;
+    }
+
+    localStorage.setItem('desafio_italiano', JSON.stringify({ fecha: hoy, completado: false }));
+
+    modo = 'desafio';
+    statsSesion = { aciertos: 0, errores: 0 };
+    document.getElementById('menu-principal').style.display = 'none';
+    document.getElementById('juego').style.display = 'block';
+    
+    preguntasExamen = [];
+    for (let i = 0; i < 5; i++) {
+      if (i < 2) {
+        const todasPalabras = vocabularioPorCategoria.todo;
+        const [es, it] = todasPalabras[Math.floor(Math.random() * todasPalabras.length)];
+        preguntasExamen.push({ tipo: 'vocab', es, it, contexto: es });
+      } else {
+        const usarIrregular = Math.random() > 0.5;
+        let verbo, conjugacion;
+        if (usarIrregular) {
+          const irregularLista = Object.keys(verbosIrregulares);
+          verbo = irregularLista[Math.floor(Math.random() * irregularLista.length)];
+          conjugacion = verbosIrregulares[verbo];
+        } else {
+          const tipo = ["are","ere","ire"][Math.floor(Math.random()*3)];
+          verbo = verbos[tipo][Math.floor(Math.random()*verbos[tipo].length)];
+          conjugacion = conjugaciones[verbo];
+        }
+        const tiempo = tiempos[Math.floor(Math.random()*3)];
+        const suj = Math.floor(Math.random()*6);
+        const correcta = conjugacion[tiempo][suj];
+        preguntasExamen.push({ tipo: 'verbo', verbo, tiempo, suj, correcta, contexto: `${verbo} (${tiempo}, ${sujetosEs[suj]})` });
+      }
+    }
+
+    indiceExamen = 0;
+    resultadosExamen = [];
+    actualizarStats();
+    mostrarSiguientePreguntaExamen();
+        }
     // === FUNCIONES DE JUEGO ===
   function volverMenuJuego() {
     if (temporizador) clearInterval(temporizador);
@@ -710,8 +784,7 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    // Elegir aleatoriamente entre regulares e irregulares
-    const usarIrregular = Math.random() > 0.6; // 40% irregulares
+    const usarIrregular = Math.random() > 0.6;
     let verbo, conjugacion;
     if (usarIrregular) {
       const irregularLista = Object.keys(verbosIrregulares);
@@ -790,9 +863,9 @@ document.addEventListener('DOMContentLoaded', () => {
     actualizarStats();
 
     setTimeout(() => {
-      if (modo === 'vocabulario') {
+      if (modoActual === 'vocabulario') {
         mostrarPreguntaVocabulario();
-      } else {
+      } else if (modoActual === 'verbos') {
         mostrarPreguntaVerbo();
       }
     }, 600);
@@ -903,6 +976,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('btn-categorias')?.addEventListener('click', mostrarCategorias);
   document.getElementById('btn-verbos')?.addEventListener('click', iniciarVerbos);
   document.getElementById('btn-examen')?.addEventListener('click', iniciarExamen);
+  document.getElementById('btn-desafio')?.addEventListener('click', iniciarDesafioDiario);
   document.getElementById('btn-errores')?.addEventListener('click', mostrarErrores);
   document.getElementById('cat-todo')?.addEventListener('click', () => iniciarVocabulario('todo'));
   document.getElementById('cat-basico')?.addEventListener('click', () => iniciarVocabulario('basico'));
