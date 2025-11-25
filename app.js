@@ -12,49 +12,161 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // === VOCABULARIO POR CATEGORÍAS ===
-  const vocabularioPorCategoria = {
-    basico: [
-      ["hola", "ciao"],["adiós", "arrivederci"],["gracias", "grazie"],["por favor", "per favore"],
-      ["sí", "sì"],["no", "no"],["buenos días", "buongiorno"],["buenas noches", "buonanotte"],
-      ["perdón", "scusa"],["disculpe", "mi scusi"],["agua", "acqua"],["uno", "uno"],["dos", "due"],
-      ["tres", "tre"],["cuatro", "quattro"],["cinco", "cinque"],["seis", "sei"],["siete", "sette"],
-      ["ocho", "otto"],["nueve", "nove"],["diez", "dieci"]
-    ],
-    comida: [
-      ["pan", "pane"],["vino", "vino"],["café", "caffè"],["leche", "latte"],["queso", "formaggio"],
-      ["manzana", "mela"],["plátano", "banana"],["carne", "carne"],["pescado", "pesce"],
-      ["huevo", "uovo"],["arroz", "riso"],["pasta", "pasta"],["sopa", "zuppa"],["azúcar", "zucchero"],
-      ["sal", "sale"],["aceite", "olio"],["agua", "acqua"],["té", "tè"],["cerveza", "birra"]
-    ],
-    viajes: [
-      ["coche", "macchina"],["autobús", "autobus"],["tren", "treno"],["avión", "aereo"],
-      ["calle", "strada"],["ciudad", "città"],["país", "paese"],["mundo", "mondo"],
-      ["hotel", "albergo"],["estación", "stazione"],["aeropuerto", "aeroporto"],["mapa", "mappa"],
-      ["derecha", "destra"],["izquierda", "sinistra"],["recto", "dritto"],["cerca", "vicino"],
-      ["lejos", "lontano"],["aquí", "qui"],["allí", "lì"]
-    ],
-    familia: [
-      ["padre", "padre"],["madre", "madre"],["hermano", "fratello"],["hermana", "sorella"],
-      ["hijo", "figlio"],["hija", "figlia"],["amigo", "amico"],["amiga", "amica"],
-      ["abuelo", "nonno"],["abuela", "nonna"],["tío", "zio"],["tía", "zia"],["primo", "cugino"],
-      ["prima", "cugina"],["esposo", "marito"],["esposa", "moglie"]
-    ],
-    casa: [
-      ["casa", "casa"],["puerta", "porta"],["ventana", "finestra"],["habitación", "stanza"],
-      ["cocina", "cucina"],["baño", "bagno"],["mesa", "tavolo"],["silla", "sedia"],
-      ["cama", "letto"],["libro", "libro"],["lápiz", "matita"],["bolígrafo", "penna"],
-      ["papel", "carta"],["teléfono", "telefono"],["computadora", "computer"],["internet", "internet"],
-      ["lámpara", "lampada"],["espejo", "specchio"]
-    ],
-    verbos: [
-      ["comer", "mangiare"],["beber", "bere"],["dormir", "dormire"],["trabajar", "lavorare"],
-      ["estudiar", "studiare"],["hablar", "parlare"],["escuchar", "ascoltare"],["ver", "vedere"],
-      ["leer", "leggere"],["escribir", "scrivere"],["correr", "correre"],["caminar", "camminare"],
-      ["ir", "andare"],["venir", "venire"],["hacer", "fare"],["poder", "potere"],["querer", "volere"],
-      ["deber", "dovere"],["saber", "sapere"],["conocer", "conoscere"]
-    ]
-  };
-
+const vocabularioPorCategoria = {
+  basico: [
+    ["hola", "ciao"],["adiós", "arrivederci"],["gracias", "grazie"],["por favor", "per favore"],
+    ["sí", "sì"],["no", "no"],["buenos días", "buongiorno"],["buenas tardes", "buon pomeriggio"],
+    ["buenas noches", "buonanotte"],["perdón", "scusa"],["disculpe", "mi scusi"],["agua", "acqua"],
+    ["uno", "uno"],["dos", "due"],["tres", "tre"],["cuatro", "quattro"],["cinco", "cinque"],
+    ["seis", "sei"],["siete", "sette"],["ocho", "otto"],["nueve", "nove"],["diez", "dieci"],
+    ["hombre", "uomo"],["mujer", "donna"],["niño", "bambino"],["niña", "bambina"],["persona", "persona"],
+    ["amigo", "amico"],["amiga", "amica"],["señor", "signore"],["señora", "signora"],["señorita", "signorina"],
+    ["hoy", "oggi"],["mañana", "domani"],["ayer", "ieri"],["ahora", "adesso"],["luego", "dopo"],
+    ["aquí", "qui"],["allí", "lì"],["sí", "sì"],["no", "no"],["bien", "bene"],["mal", "male"],
+    ["grande", "grande"],["pequeño", "piccolo"],["nuevo", "nuovo"],["viejo", "vecchio"],["bueno", "buono"],
+    ["malo", "cattivo"],["rápido", "veloce"],["lento", "lento"],["fácil", "facile"],["difícil", "difficile"]
+  ],
+  comida: [
+    ["pan", "pane"],["vino", "vino"],["café", "caffè"],["leche", "latte"],["queso", "formaggio"],
+    ["mantequilla", "burro"],["huevos", "uova"],["carne", "carne"],["pollo", "pollo"],["cerdo", "maiale"],
+    ["buey", "manzo"],["pescado", "pesce"],["marisco", "frutti di mare"],["arroz", "riso"],["pasta", "pasta"],
+    ["sopa", "zuppa"],["ensalada", "insalata"],["aceite", "olio"],["sal", "sale"],["azúcar", "zucchero"],
+    ["manzana", "mela"],["plátano", "banana"],["naranja", "arancia"],["limón", "limone"],["uvas", "uva"],
+    ["fresas", "fragole"],["melocotón", "pesca"],["pera", "pera"],["sandía", "anguria"],["piña", "ananas"],
+    ["zanahoria", "carota"],["patata", "patata"],["tomate", "pomodoro"],["cebolla", "cipolla"],["ajo", "aglio"],
+    ["hongo", "fungo"],["lechuga", "lattuga"],["espinacas", "spinaci"],["coliflor", "cavolfiore"],["brócoli", "broccolo"],
+    ["pollo asado", "pollo arrosto"],["pizza", "pizza"],["helado", "gelato"],["pastel", "torta"],["chocolate", "cioccolato"],
+    ["té", "tè"],["cerveza", "birra"],["agua mineral", "acqua minerale"],["jugo", "succo"],["limonada", "limonata"]
+  ],
+  viajes: [
+    ["coche", "macchina"],["autobús", "autobus"],["tren", "treno"],["avión", "aereo"],["barco", "barca"],
+    ["taxi", "taxi"],["bicicleta", "bicicletta"],["maleta", "valigia"],["pasaporte", "passaporto"],["billete", "biglietto"],
+    ["entrada", "ingresso"],["salida", "uscita"],["calle", "strada"],["carretera", "strada"],["autopista", "autostrada"],
+    ["ciudad", "città"],["país", "paese"],["mundo", "mondo"],["continente", "continente"],["oceano", "oceano"],
+    ["mapa", "mappa"],["brújula", "bussola"],["hotel", "albergo"],["motel", "motel"],["camping", "campeggio"],
+    ["recepción", "reception"],["habitación", "camera"],["llave", "chiave"],["baño", "bagno"],["ducha", "doccia"],
+    ["estación", "stazione"],["aeropuerto", "aeroporto"],["puerto", "porto"],["taquilla", "biglietteria"],["embarque", "imbarco"],
+    ["salida", "partenza"],["llegada", "arrivo"],["retraso", "ritardo"],["equipaje", "bagaglio"],["aduana", "dogana"],
+    ["turista", "turista"],["guía", "guida"],["atracción", "attrazione"],["monumento", "monumento"],["museo", "museo"]
+  ],
+  familia: [
+    ["padre", "padre"],["madre", "madre"],["padres", "genitori"],["hijo", "figlio"],["hija", "figlia"],
+    ["hijos", "figli"],["hermano", "fratello"],["hermana", "sorella"],["hermanos", "fratelli"],["abuelo", "nonno"],
+    ["abuela", "nonna"],["abuelos", "nonni"],["tío", "zio"],["tía", "zia"],["primos", "cugini"],
+    ["esposo", "marito"],["esposa", "moglie"],["pareja", "compagno/compagna"],["novio", "fidanzato"],["novia", "fidanzata"],
+    ["sobrino", "nipote"],["suegro", "suocero"],["suegra", "suocera"],["cuñado", "cognato"],["cuñada", "cognata"],
+    ["padrastro", "patrigno"],["madrastra", "matrigna"],["hijastro", "figliastro"],["hijastra", "figliastra"],["gemelos", "gemelli"]
+  ],
+  casa: [
+    ["casa", "casa"],["apartamento", "appartamento"],["puerta", "porta"],["ventana", "finestra"],["techo", "tetto"],
+    ["pared", "parete"],["suelo", "pavimento"],["habitación", "stanza"],["dormitorio", "camera da letto"],["baño", "bagno"],
+    ["cocina", "cucina"],["salón", "soggiorno"],["comedor", "sala da pranzo"],["balcón", "balcone"],["jardín", "giardino"],
+    ["mesa", "tavolo"],["silla", "sedia"],["sofá", "divano"],["cama", "letto"],["armario", "armadio"],
+    ["lámpara", "lampada"],["lámpara de techo", "lampadario"],["espejo", "specchio"],["cuadro", "quadro"],["alfombra", "tappeto"],
+    ["nevera", "frigorifero"],["horno", "forno"],["microondas", "microonde"],["lavadora", "lavatrice"],["secadora", "asciugatrice"],
+    ["teléfono", "telefono"],["televisión", "televisione"],["computadora", "computer"],["internet", "internet"],["enchufe", "presa"],
+    ["llave", "chiave"],["cerradura", "serratura"],["timbre", "campanello"],["ascensor", "ascensore"],["escalerilla", "scala"]
+  ],
+  verbos: [
+    ["comer", "mangiare"],["beber", "bere"],["dormir", "dormire"],["trabajar", "lavorare"],
+    ["estudiar", "studiare"],["hablar", "parlare"],["escuchar", "ascoltare"],["ver", "vedere"],
+    ["leer", "leggere"],["escribir", "scrivere"],["correr", "correre"],["caminar", "camminare"],
+    ["ir", "andare"],["venir", "venire"],["hacer", "fare"],["poder", "potere"],["querer", "volere"],
+    ["deber", "dovere"],["saber", "sapere"],["conocer", "conoscere"],["tener", "avere"],["estar", "essere"],
+    ["dar", "dare"],["decir", "dire"],["ir a buscar", "andare a prendere"],["llevar", "portare"],["traer", "portare"],
+    ["mirar", "guardare"],["buscar", "cercare"],["llamar", "chiamare"],["preguntar", "chiedere"],["responder", "rispondere"],
+    ["entender", "capire"],["aprender", "imparare"],["enseñar", "insegnare"],["ayudar", "aiutare"],["necesitar", "aver bisogno di"],
+    ["gustar", "piacere"],["oler", "odorare"],["tocar", "toccare"],["sentir", "sentire"],["empezar", "iniziare"],
+    ["terminar", "finire"],["esperar", "aspettare"],["pensar", "pensare"],["creer", "credere"],["recordar", "ricordare"],
+    ["olvidar", "dimenticare"],["parecer", "sembrare"],["dejar", "lasciare"],["permitir", "permettere"],["prohibir", "proibire"]
+  ],
+  animales: [
+    ["perro", "cane"],["gato", "gatto"],["pájaro", "uccello"],["pez", "pesce"],["caballo", "cavallo"],
+    ["vaca", "mucca"],["oveja", "pecora"],["cerdo", "maiale"],["gallina", "gallina"],["rana", "rana"],
+    ["serpiente", "serpente"],["oso", "orso"],["león", "leone"],["tigre", "tigre"],["elefante", "elefante"],
+    ["mono", "scimmia"],["ratón", "topo"],["ardilla", "scoiattolo"],["liebre", "lepre"],["zorro", "volpe"],
+    ["lobo", "lupo"],["ciervo", "cervo"],["jirafa", "giraffa"],["hipopótamo", "ippopotamo"],["rinoceronte", "rinoceronte"],
+    ["cocodrilo", "coccodrillo"],["tortuga", "tartaruga"],["araña", "ragno"],["mariposa", "farfalla"],["abeja", "ape"],
+    ["hormiga", "formica"],["mosca", "mosca"],["mosquito", "zanzara"],["ballena", "balena"],["delfín", "delfino"],
+    ["tiburón", "squalo"],["pulpo", "polpo"],["cangrejo", "granchio"],["langosta", "aragosta"],["gallina", "gallina"],
+    ["pavo", "tacchino"],["pato", "anatra"],["ganso", "oca"],["paloma", "piccione"],["cuervo", "corvo"],
+    ["águila", "aquila"],["búho", "gufo"],["murciélago", "pipistrello"],["pingüino", "pinguino"],["camello", "cammello"]
+  ],
+  naturaleza: [
+    ["árbol", "albero"],["flor", "fiore"],["hoja", "foglia"],["rama", "ramo"],["tronco", "tronco"],
+    ["raíz", "radice"],["fruta", "frutto"],["semilla", "seme"],["pasto", "erba"],["hierba", "erba"],
+    ["bosque", "bosco"],["selva", "giungla"],["montaña", "montagna"],["colina", "collina"],["valle", "valle"],
+    ["río", "fiume"],["lago", "lago"],["mar", "mare"],["océano", "oceano"],["playa", "spiaggia"],
+    ["desierto", "deserto"],["isla", "isola"],["cielo", "cielo"],["nube", "nuvola"],["lluvia", "pioggia"],
+    ["nieve", "neve"],["hielo", "ghiaccio"],["viento", "vento"],["rayo", "fulmine"],["trueno", "tuono"],
+    ["sol", "sole"],["luna", "luna"],["estrella", "stella"],["planeta", "pianeta"],["universo", "universo"],
+    ["tierra", "terra"],["arena", "sabbia"],["roca", "roccia"],["piedra", "pietra"],["cueva", "grotta"],
+    ["volcán", "vulcano"],["terremoto", "terremoto"],["tsunami", "tsunami"],["arcoíris", "arcobaleno"],["amanecer", "alba"],
+    ["atardecer", "tramonto"],["noche", "notte"],["día", "giorno"]
+  ],
+  trabajo: [
+    ["trabajo", "lavoro"],["oficina", "ufficio"],["empresa", "azienda"],["jefe", "capo"],["empleado", "impiegato"],
+    ["colega", "collega"],["reunión", "riunione"],["correo", "posta"],["computadora", "computer"],["teléfono", "telefono"],
+    ["horario", "orario"],["salario", "stipendio"],["contrato", "contratto"],["vacaciones", "ferie"],["permiso", "permesso"],
+    ["ascenso", "promozione"],["despido", "licenziamento"],["currículum", "curriculum"],["entrevista", "colloquio"],
+    ["profesor", "professore"],["médico", "medico"],["enfermero", "infermiere"],["ingeniero", "ingegnere"],["abogado", "avvocato"],
+    ["policía", "poliziotto"],["bombero", "vigile del fuoco"],["chef", "cuoco"],["artista", "artista"],["músico", "musicista"],
+    ["actor", "attore"],["escritor", "scrittore"],["fotógrafo", "fotografo"],["pintor", "pittore"],["arquitecto", "architetto"],
+    ["científico", "scienziato"],["programador", "programmatore"],["diseñador", "designer"],["vendedor", "venditore"],["gerente", "manager"]
+  ],
+  salud: [
+    ["salud", "salute"],["enfermedad", "malattia"],["dolor", "dolore"],["fiebre", "febbre"],["tos", "tosse"],
+    ["resfriado", "raffreddore"],["gripe", "influenza"],["hospital", "ospedale"],["clínica", "clinica"],
+    ["médico", "medico"],["enfermero", "infermiere"],["farmacia", "farmacia"],["medicina", "medicina"],
+    ["pastilla", "compressa"],["inyección", "iniezione"],["receta", "ricetta"],["sangre", "sangue"],
+    ["corazón", "cuore"],["cabeza", "testa"],["mano", "mano"],["pie", "piede"],["ojo", "occhio"],
+    ["oreja", "orecchio"],["nariz", "naso"],["boca", "bocca"],["diente", "dente"],["piel", "pelle"],
+    ["hueso", "osso"],["músculo", "muscolo"],["estómago", "stomaco"],["pulmón", "polmone"],["hígado", "fegato"],
+    ["embarazo", "gravidanza"],["parto", "parto"],["bebé", "bambino"],["vacuna", "vaccino"],["ejercicio", "esercizio"],
+    ["dieta", "dieta"],["agua", "acqua"],["dormir", "dormire"],["estrés", "stress"],["relajación", "rilassamento"]
+  ],
+  clima: [
+    ["clima", "clima"],["tiempo", "tempo"],["calor", "caldo"],["frío", "freddo"],["templado", "mite"],
+    ["soleado", "soleggiato"],["nublado", "nuvoloso"],["lluvioso", "piovoso"],["tormenta", "tempesta"],
+    ["neblina", "nebbia"],["granizo", "grandine"],["viento", "vento"],["huracán", "uragano"],["tornado", "tornado"],
+    ["primavera", "primavera"],["verano", "estate"],["otoño", "autunno"],["invierno", "inverno"],
+    ["hoy hace calor", "oggi fa caldo"],["hoy hace frío", "oggi fa freddo"],["está lloviendo", "piove"],
+    ["está nevando", "nevica"],["hace viento", "c'è vento"],["el cielo está despejado", "il cielo è sereno"],
+    ["va a llover", "sta per piovere"],["hace buen tiempo", "fa bel tempo"],["hace mal tiempo", "fa brutto tempo"]
+  ],
+  expresiones: [
+    ["¿Cómo estás?", "Come stai?"],
+    ["Estoy bien, gracias", "Sto bene, grazie"],
+    ["¿Cómo te llamas?", "Come ti chiami?"],
+    ["Me llamo...", "Mi chiamo..."],
+    ["Mucho gusto", "Piacere"],
+    ["Disculpa", "Scusa"],
+    ["¿Hablas español?", "Parli spagnolo?"],
+    ["No entiendo", "Non capisco"],
+    ["¿Puedes repetir?", "Puoi ripetere?"],
+    ["¿Dónde está el baño?", "Dov'è il bagno?"],
+    ["¿Cuánto cuesta?", "Quanto costa?"],
+    ["Ayuda, por favor", "Aiuto, per favore"],
+    ["Estoy perdido/a", "Mi sono perso/a"],
+    ["¿A qué hora...?", "A che ora...?"],
+    ["Hasta mañana", "A domani"],
+    ["Buenas noches", "Buonanotte"],
+    ["Feliz cumpleaños", "Buon compleanno"],
+    ["Salud", "Salute"],
+    ["Con permiso", "Permesso"],
+    ["De nada", "Di niente"],
+    ["Por supuesto", "Certo"],
+    ["Tal vez", "Forse"],
+    ["¡Cuidado!", "Attento!"],
+    ["¡Felicidades!", "Congratulazioni!"],
+    ["¡Buena suerte!", "Buona fortuna!"],
+    ["¡Salud!", "Cin cin!"],
+    ["¿Qué tal?", "Che succede?"],
+    ["No lo sé", "Non lo so"],
+    ["¡Genial!", "Fantastico!"],
+    ["Estoy cansado/a", "Sono stanco/a"]
+  ]
+};
   let todo = [];
   for (let cat in vocabularioPorCategoria) {
     todo = todo.concat(vocabularioPorCategoria[cat]);
@@ -585,8 +697,14 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('count-viajes').textContent = vocabularioPorCategoria.viajes.length;
     document.getElementById('count-familia').textContent = vocabularioPorCategoria.familia.length;
     document.getElementById('count-casa').textContent = vocabularioPorCategoria.casa.length;
+    document.getElementById('count-animales').textContent = vocabularioPorCategoria.animales.length;
+    document.getElementById('count-naturaleza').textContent = vocabularioPorCategoria.naturaleza.length;
+    document.getElementById('count-trabajo').textContent = vocabularioPorCategoria.trabajo.length;
+    document.getElementById('count-salud').textContent = vocabularioPorCategoria.salud.length;
+    document.getElementById('count-clima').textContent = vocabularioPorCategoria.clima.length;
+    document.getElementById('count-expresiones').textContent = vocabularioPorCategoria.expresiones.length;
     document.getElementById('count-verbos').textContent = vocabularioPorCategoria.verbos.length;
-                                                                                   }
+  }
     // === FUNCIONES DE JUEGO ===
   function volverMenuJuego() {
     if (temporizador) clearInterval(temporizador);
@@ -972,6 +1090,12 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('cat-viajes')?.addEventListener('click', () => iniciarVocabulario('viajes'));
   document.getElementById('cat-familia')?.addEventListener('click', () => iniciarVocabulario('familia'));
   document.getElementById('cat-casa')?.addEventListener('click', () => iniciarVocabulario('casa'));
+  document.getElementById('cat-animales')?.addEventListener('click', () => iniciarVocabulario('animales'));
+  document.getElementById('cat-naturaleza')?.addEventListener('click', () => iniciarVocabulario('naturaleza'));
+  document.getElementById('cat-trabajo')?.addEventListener('click', () => iniciarVocabulario('trabajo'));
+  document.getElementById('cat-salud')?.addEventListener('click', () => iniciarVocabulario('salud'));
+  document.getElementById('cat-clima')?.addEventListener('click', () => iniciarVocabulario('clima'));
+  document.getElementById('cat-expresiones')?.addEventListener('click', () => iniciarVocabulario('expresiones'));
   document.getElementById('cat-verbos')?.addEventListener('click', () => iniciarVocabulario('verbos'));
   document.getElementById('btn-volver-categorias')?.addEventListener('click', () => {
     document.getElementById('categorias').style.display = 'none';
