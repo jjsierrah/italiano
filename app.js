@@ -194,6 +194,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let tiempoRestante = 0;
   let preguntaActual = null;
   let modoActual = null;
+  let palabrasUsadasPorCategoria = {}; // ← nuevo
 
   function actualizarStats() {
     const statsSesionEl = document.getElementById('stats-sesion');
@@ -574,7 +575,18 @@ document.addEventListener('DOMContentLoaded', () => {
     resultadosExamen = [];
     actualizarStats();
     mostrarSiguientePreguntaExamen();
-        }
+  }
+
+  // === CONTADORES DE CATEGORÍAS ===
+  function actualizarContadoresCategorias() {
+    document.getElementById('count-todo').textContent = vocabularioPorCategoria.todo.length;
+    document.getElementById('count-basico').textContent = vocabularioPorCategoria.basico.length;
+    document.getElementById('count-comida').textContent = vocabularioPorCategoria.comida.length;
+    document.getElementById('count-viajes').textContent = vocabularioPorCategoria.viajes.length;
+    document.getElementById('count-familia').textContent = vocabularioPorCategoria.familia.length;
+    document.getElementById('count-casa').textContent = vocabularioPorCategoria.casa.length;
+    document.getElementById('count-verbos').textContent = vocabularioPorCategoria.verbos.length;
+                                                                                   }
     // === FUNCIONES DE JUEGO ===
   function volverMenuJuego() {
     if (temporizador) clearInterval(temporizador);
@@ -607,6 +619,8 @@ document.addEventListener('DOMContentLoaded', () => {
     modo = 'vocabulario';
     categoriaActual = categoria;
     statsSesion = { aciertos: 0, errores: 0 };
+    // Reiniciar palabras usadas para esta categoría
+    palabrasUsadasPorCategoria[categoria] = new Set();
     document.getElementById('categorias').style.display = 'none';
     document.getElementById('juego').style.display = 'block';
     actualizarStats();
@@ -614,55 +628,27 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function mostrarPreguntaVocabulario() {
-    const repasos = obtenerRepasosPendientes().filter(r => r.tipo === 'vocabulario');
-    if (repasos.length > 0) {
-      const repaso = repasos[0];
-      const [es, it] = repaso.contexto.includes('->') ? repaso.contexto.split('->') : [repaso.contexto, repaso.palabra];
+    let palabrasDisponibles = vocabularioPorCategoria[categoriaActual].filter(
+      (item, index) => !palabrasUsadasPorCategoria[categoriaActual]?.has(index)
+    );
 
-      preguntaActual = { tipo: 'vocabulario', es, it, contexto: repaso.contexto, correcta: it, esRepaso: true };
-      modoActual = 'vocabulario';
-
-      if (modoEscritura) {
-        document.getElementById('pregunta').textContent = `🔁 REPASO: Escribe en italiano: "${es}"`;
-        document.getElementById('respuesta-escrita').value = '';
-        document.getElementById('respuesta-escrita').style.display = 'block';
-        document.getElementById('btn-enviar').style.display = 'block';
-        document.getElementById('opciones').style.display = 'none';
-      } else {
-        let opciones = [it];
-        while (opciones.length < 4) {
-          const r = vocabularioPorCategoria.todo[Math.floor(Math.random() * vocabularioPorCategoria.todo.length)][1];
-          if (!opciones.includes(r)) opciones.push(r);
-        }
-        shuffle(opciones);
-        document.getElementById('pregunta').textContent = `🔁 REPASO: ¿Cómo se dice "${es}" en italiano?`;
-        for (let i = 0; i < 4; i++) {
-          document.getElementById(`opcion${i}`).textContent = opciones[i];
-          document.getElementById(`opcion${i}`).onclick = () => {
-            reproducir(opciones[i]);
-            if (opciones[i].toLowerCase() === it.toLowerCase()) {
-              subirNivelRepaso(repaso.contexto);
-              statsSesion.aciertos++;
-              statsGlobal.aciertos++;
-              alert("✅ ¡Bien! Subes de nivel.");
-            } else {
-              programarRepaso(it, repaso.contexto, 'vocabulario');
-              statsSesion.errores++;
-              statsGlobal.errores++;
-              alert(`❌ Incorrecto.\nTú: ${opciones[i]}\nCorrecto: ${it}`);
-            }
-            guardarStats();
-            actualizarStats();
-            setTimeout(mostrarPreguntaVocabulario, 600);
-          };
-        }
-      }
-      return;
+    if (palabrasDisponibles.length === 0) {
+      // Reiniciar si ya se vieron todas
+      palabrasUsadasPorCategoria[categoriaActual] = new Set();
+      palabrasDisponibles = vocabularioPorCategoria[categoriaActual];
     }
 
-    const vocab = vocabularioPorCategoria[categoriaActual];
-    const idx = Math.floor(Math.random() * vocab.length);
-    const [es, it] = vocab[idx];
+    const idx = Math.floor(Math.random() * palabrasDisponibles.length);
+    const [es, it] = palabrasDisponibles[idx];
+
+    // Encontrar índice original para marcar como usada
+    const indiceOriginal = vocabularioPorCategoria[categoriaActual].findIndex(
+      item => item[0] === es && item[1] === it
+    );
+    if (!palabrasUsadasPorCategoria[categoriaActual]) {
+      palabrasUsadasPorCategoria[categoriaActual] = new Set();
+    }
+    palabrasUsadasPorCategoria[categoriaActual].add(indiceOriginal);
 
     preguntaActual = { tipo: 'vocabulario', es, it, contexto: es, correcta: it, esRepaso: false };
     modoActual = 'vocabulario';
@@ -784,6 +770,7 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
+    // Elegir aleatoriamente entre regulares e irregulares
     const usarIrregular = Math.random() > 0.6;
     let verbo, conjugacion;
     if (usarIrregular) {
@@ -962,6 +949,7 @@ document.addEventListener('DOMContentLoaded', () => {
       theme = 'dark';
     }
     applyTheme(theme);
+    actualizarContadoresCategorias(); // ← clave: muestra los números
   }
 
   const themeToggle = document.getElementById('theme-toggle');
