@@ -591,6 +591,7 @@ const vocabularioPorCategoria = {
       statsGlobal.aciertos += aciertos;
       statsGlobal.errores += (total - aciertos);
       guardarStats();
+      showNotification("🎯 ¡Desafío completado!");
     } else {
       const historial = JSON.parse(localStorage.getItem('examenes_italiano')) || [];
       historial.push({
@@ -647,7 +648,7 @@ const vocabularioPorCategoria = {
     const desafio = JSON.parse(localStorage.getItem('desafio_italiano')) || { fecha: '', completado: false };
 
     if (desafio.fecha === hoy && desafio.completado) {
-      showNotification("🎉 ¡Ya completaste el desafío de hoy! Vuelve mañana.");
+      showNotification("🎉 ¡Ya completaste el desafío de hoy!");
       return;
     }
 
@@ -697,29 +698,29 @@ const vocabularioPorCategoria = {
     document.getElementById('count-viajes').textContent = vocabularioPorCategoria.viajes.length;
     document.getElementById('count-familia').textContent = vocabularioPorCategoria.familia.length;
     document.getElementById('count-casa').textContent = vocabularioPorCategoria.casa.length;
+    document.getElementById('count-verbos').textContent = vocabularioPorCategoria.verbos.length;
     document.getElementById('count-animales').textContent = vocabularioPorCategoria.animales.length;
     document.getElementById('count-naturaleza').textContent = vocabularioPorCategoria.naturaleza.length;
     document.getElementById('count-trabajo').textContent = vocabularioPorCategoria.trabajo.length;
     document.getElementById('count-salud').textContent = vocabularioPorCategoria.salud.length;
     document.getElementById('count-clima').textContent = vocabularioPorCategoria.clima.length;
     document.getElementById('count-expresiones').textContent = vocabularioPorCategoria.expresiones.length;
-    document.getElementById('count-verbos').textContent = vocabularioPorCategoria.verbos.length;
-        }
+  }
     // === Sistema de notificaciones integrado ===
-function showNotification(message, isError = false) {
-  const el = document.getElementById('notification');
-  if (!el) return;
-  
-  el.textContent = message;
-  el.style.background = isError ? '#d32f2f' : '#424242';
-  el.style.display = 'block';
-  
-  // Ocultar después de 2 segundos
-  setTimeout(() => {
-    el.style.display = 'none';
-  }, 2000);
-}
-// === FUNCIONES DE JUEGO ===
+  function showNotification(message, isError = false) {
+    const el = document.getElementById('notification');
+    if (!el) return;
+    
+    el.textContent = message;
+    el.style.background = isError ? '#d32f2f' : '#424242';
+    el.style.display = 'block';
+    
+    setTimeout(() => {
+      el.style.display = 'none';
+    }, 2000);
+  }
+
+  // === FUNCIONES DE JUEGO ===
   function volverMenuJuego() {
     if (temporizador) clearInterval(temporizador);
     modo = null;
@@ -751,7 +752,6 @@ function showNotification(message, isError = false) {
     modo = 'vocabulario';
     categoriaActual = categoria;
     statsSesion = { aciertos: 0, errores: 0 };
-    // Reiniciar palabras usadas para esta categoría
     palabrasUsadasPorCategoria[categoria] = new Set();
     document.getElementById('categorias').style.display = 'none';
     document.getElementById('juego').style.display = 'block';
@@ -765,7 +765,6 @@ function showNotification(message, isError = false) {
     );
 
     if (palabrasDisponibles.length === 0) {
-      // Reiniciar si ya se vieron todas
       palabrasUsadasPorCategoria[categoriaActual] = new Set();
       palabrasDisponibles = vocabularioPorCategoria[categoriaActual];
     }
@@ -773,7 +772,6 @@ function showNotification(message, isError = false) {
     const idx = Math.floor(Math.random() * palabrasDisponibles.length);
     const [es, it] = palabrasDisponibles[idx];
 
-    // Encontrar índice original para marcar como usada
     const indiceOriginal = vocabularioPorCategoria[categoriaActual].findIndex(
       item => item[0] === es && item[1] === it
     );
@@ -891,7 +889,7 @@ function showNotification(message, isError = false) {
               programarRepaso(correcta, repaso.contexto, 'verbo');
               statsSesion.errores++;
               statsGlobal.errores++;
-              showNotification(`❌ Incorrecto. ¡Vuelve a intentarlo!);
+              showNotification("❌ Incorrecto. ¡Inténtalo de nuevo!");
             }
             guardarStats();
             actualizarStats();
@@ -902,7 +900,6 @@ function showNotification(message, isError = false) {
       return;
     }
 
-    // Elegir aleatoriamente entre regulares e irregulares
     const usarIrregular = Math.random() > 0.6;
     let verbo, conjugacion;
     if (usarIrregular) {
@@ -976,7 +973,7 @@ function showNotification(message, isError = false) {
       statsGlobal.errores++;
       errores.push({tipo, contexto, dada: respuesta, correcta});
       programarRepaso(correcta, contexto, tipo);
-      showNotification("❌ Incorrecto. ¡Vuelve a intentarlo!");
+      showNotification("❌ Incorrecto. ¡Inténtalo de nuevo!");
     }
     guardarStats();
     actualizarStats();
@@ -1042,10 +1039,10 @@ function showNotification(message, isError = false) {
       });
       if (preguntaActual.esRepaso) {
         programarRepaso(preguntaActual.correcta, preguntaActual.contexto, preguntaActual.tipo);
-        showNotification("❌ Incorrecto. ¡Vuelve a intentarlo!");
+        showNotification("❌ Incorrecto. ¡Inténtalo de nuevo!");
       } else {
         programarRepaso(preguntaActual.correcta, preguntaActual.contexto, preguntaActual.tipo);
-        showNotification("❌ Incorrecto. ¡Vuelve a intentarlo!");
+        showNotification("❌ Incorrecto. ¡Inténtalo de nuevo!");
       }
     }
 
@@ -1081,7 +1078,7 @@ function showNotification(message, isError = false) {
       theme = 'dark';
     }
     applyTheme(theme);
-    actualizarContadoresCategorias(); // ← clave: muestra los números
+    actualizarContadoresCategorias();
   }
 
   const themeToggle = document.getElementById('theme-toggle');
@@ -1104,13 +1101,13 @@ function showNotification(message, isError = false) {
   document.getElementById('cat-viajes')?.addEventListener('click', () => iniciarVocabulario('viajes'));
   document.getElementById('cat-familia')?.addEventListener('click', () => iniciarVocabulario('familia'));
   document.getElementById('cat-casa')?.addEventListener('click', () => iniciarVocabulario('casa'));
+  document.getElementById('cat-verbos')?.addEventListener('click', () => iniciarVocabulario('verbos'));
   document.getElementById('cat-animales')?.addEventListener('click', () => iniciarVocabulario('animales'));
   document.getElementById('cat-naturaleza')?.addEventListener('click', () => iniciarVocabulario('naturaleza'));
   document.getElementById('cat-trabajo')?.addEventListener('click', () => iniciarVocabulario('trabajo'));
   document.getElementById('cat-salud')?.addEventListener('click', () => iniciarVocabulario('salud'));
   document.getElementById('cat-clima')?.addEventListener('click', () => iniciarVocabulario('clima'));
   document.getElementById('cat-expresiones')?.addEventListener('click', () => iniciarVocabulario('expresiones'));
-  document.getElementById('cat-verbos')?.addEventListener('click', () => iniciarVocabulario('verbos'));
   document.getElementById('btn-volver-categorias')?.addEventListener('click', () => {
     document.getElementById('categorias').style.display = 'none';
     document.getElementById('menu-principal').style.display = 'block';
