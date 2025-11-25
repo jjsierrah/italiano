@@ -647,7 +647,7 @@ const vocabularioPorCategoria = {
     const desafio = JSON.parse(localStorage.getItem('desafio_italiano')) || { fecha: '', completado: false };
 
     if (desafio.fecha === hoy && desafio.completado) {
-      alert("🎉 ¡Ya completaste el desafío de hoy! Vuelve mañana.");
+      showNotification("🎉 ¡Ya completaste el desafío de hoy! Vuelve mañana.");
       return;
     }
 
@@ -704,8 +704,22 @@ const vocabularioPorCategoria = {
     document.getElementById('count-clima').textContent = vocabularioPorCategoria.clima.length;
     document.getElementById('count-expresiones').textContent = vocabularioPorCategoria.expresiones.length;
     document.getElementById('count-verbos').textContent = vocabularioPorCategoria.verbos.length;
-  }
-    // === FUNCIONES DE JUEGO ===
+        }
+    // === Sistema de notificaciones integrado ===
+function showNotification(message, isError = false) {
+  const el = document.getElementById('notification');
+  if (!el) return;
+  
+  el.textContent = message;
+  el.style.background = isError ? '#d32f2f' : '#424242';
+  el.style.display = 'block';
+  
+  // Ocultar después de 2 segundos
+  setTimeout(() => {
+    el.style.display = 'none';
+  }, 2000);
+}
+// === FUNCIONES DE JUEGO ===
   function volverMenuJuego() {
     if (temporizador) clearInterval(temporizador);
     modo = null;
@@ -872,12 +886,12 @@ const vocabularioPorCategoria = {
               subirNivelRepaso(repaso.contexto);
               statsSesion.aciertos++;
               statsGlobal.aciertos++;
-              alert("✅ ¡Bien! Subes de nivel.");
+              showNotification("✅ ¡Bien! Subes de nivel.");
             } else {
               programarRepaso(correcta, repaso.contexto, 'verbo');
               statsSesion.errores++;
               statsGlobal.errores++;
-              alert(`❌ Incorrecto.\nTú: ${opciones[i]}\nCorrecto: ${correcta}`);
+              showNotification(`❌ Incorrecto. ¡Vuelve a intentarlo!);
             }
             guardarStats();
             actualizarStats();
@@ -956,13 +970,13 @@ const vocabularioPorCategoria = {
     if (respuesta === correcta) {
       statsSesion.aciertos++;
       statsGlobal.aciertos++;
-      alert("¡Correcto! ✅");
+      showNotification("¡Correcto! ✅");
     } else {
       statsSesion.errores++;
       statsGlobal.errores++;
       errores.push({tipo, contexto, dada: respuesta, correcta});
       programarRepaso(correcta, contexto, tipo);
-      alert(`❌ Incorrecto.\nTú: ${respuesta}\nCorrecto: ${correcta}`);
+      showNotification("❌ Incorrecto. ¡Vuelve a intentarlo!");
     }
     guardarStats();
     actualizarStats();
@@ -1013,9 +1027,9 @@ const vocabularioPorCategoria = {
       statsGlobal.aciertos++;
       if (preguntaActual.esRepaso) {
         subirNivelRepaso(preguntaActual.contexto);
-        alert("✅ ¡Bien! Subes de nivel.");
+        showNotification("✅ ¡Bien! Subes de nivel.");
       } else {
-        alert("¡Correcto! ✅");
+        showNotification("¡Correcto! ✅");
       }
     } else {
       statsSesion.errores++;
@@ -1028,10 +1042,10 @@ const vocabularioPorCategoria = {
       });
       if (preguntaActual.esRepaso) {
         programarRepaso(preguntaActual.correcta, preguntaActual.contexto, preguntaActual.tipo);
-        alert(`❌ Incorrecto.\nTú: ${respuesta}\nCorrecto: ${preguntaActual.correcta}`);
+        showNotification("❌ Incorrecto. ¡Vuelve a intentarlo!");
       } else {
         programarRepaso(preguntaActual.correcta, preguntaActual.contexto, preguntaActual.tipo);
-        alert(`❌ Incorrecto.\nTú: ${respuesta}\nCorrecto: ${preguntaActual.correcta}`);
+        showNotification("❌ Incorrecto. ¡Vuelve a intentarlo!");
       }
     }
 
