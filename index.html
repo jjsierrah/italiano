@@ -20,6 +20,8 @@
       <button id="btn-verbos">📝 Practicar Verbos</button>
       <button id="btn-examen" class="examen-btn">🎓 Modo Examen</button>
       <button id="btn-desafio">🎯 Desafío Diario</button>
+      <button id="btn-exportar">📤 Exportar Progreso</button>
+      <button id="btn-importar">📥 Importar Progreso</button>
       <div class="stats" id="stats-global"></div>
       <button id="btn-errores">❗ Mis Errores</button>
     </div>
@@ -72,41 +74,44 @@
       <button id="btn-toggle-modo">↔️ Cambiar modo</button>
       <button id="btn-volver-menu">🔙 Menú</button>
     </div>
+
+    <div class="card" id="errores" style="display:none;">
+      <h2>❌ Mis Errores</h2>
+      <div id="errores-lista"></div>
+      <button id="btn-reiniciar-errores">🗑️ Limpiar errores</button>
+      <button id="btn-cerrar-errores">Cerrar</button>
+    </div>
+
+    <div class="card" id="examen-resultados" style="display:none;">
+      <h2>🎓 Resultados del Examen</h2>
+      <div id="resultados-contenido"></div>
+      <button id="btn-ver-detalle">🔍 Ver respuestas</button>
+      <button id="btn-volver-menu-resultados">Menú principal</button>
+    </div>
+
+    <!-- Contenedor de notificaciones -->
+    <div id="notification" style="
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #424242;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-weight: bold;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      z-index: 1000;
+      display: none;
+      text-align: center;
+      max-width: 90%;
+      word-break: break-word;
+    "></div>
+
+    <!-- Input oculto para importar -->
+    <input type="file" id="import-file" accept=".json" style="display:none;">
+
+    <script src="app.js"></script>
   </div>
-
-  <div class="card" id="errores" style="display:none;">
-    <h2>❌ Mis Errores</h2>
-    <div id="errores-lista"></div>
-    <button id="btn-reiniciar-errores">🗑️ Limpiar errores</button>
-    <button id="btn-cerrar-errores">Cerrar</button>
-  </div>
-
-  <div class="card" id="examen-resultados" style="display:none;">
-    <h2>🎓 Resultados del Examen</h2>
-    <div id="resultados-contenido"></div>
-    <button id="btn-ver-detalle">🔍 Ver respuestas</button>
-    <button id="btn-volver-menu-resultados">Menú principal</button>
-  </div>
-
-  <!-- Contenedor de notificaciones personalizadas -->
-  <div id="notification" style="
-    position: fixed;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: #424242;
-    color: white;
-    padding: 12px 20px;
-    border-radius: 8px;
-    font-weight: bold;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-    z-index: 1000;
-    display: none;
-    text-align: center;
-    max-width: 90%;
-    word-break: break-word;
-  "></div>
-
-  <script src="app.js"></script>
 </body>
 </html>
