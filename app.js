@@ -650,6 +650,9 @@ const vocabularioPorCategoria = {
     const total = resultadosExamen.length;
     const porcentaje = Math.round((aciertos / total) * 100);
 
+    // Guardar para compartir
+    window.ultimosResultados = { aciertos, total, porcentaje };
+
     if (modo === 'desafio') {
       const hoy = new Date().toISOString().split('T')[0];
       localStorage.setItem('desafio_italiano', JSON.stringify({
@@ -1084,9 +1087,9 @@ const vocabularioPorCategoria = {
         };
       }
     }
-        }
+  }
 
-  function verificarRespuesta(respuesta, correcta, contexto, tipo) {
+    function verificarRespuesta(respuesta, correcta, contexto, tipo) {
     if (respuesta === correcta) {
       statsSesion.aciertos++;
       statsGlobal.aciertos++;
@@ -1212,6 +1215,23 @@ const vocabularioPorCategoria = {
     });
   }
 
+  // === COMPARTIR RESULTADOS ===
+  function compartirResultados(aciertos, total, porcentaje) {
+    const mensaje = `¡He acertado ${aciertos}/${total} en JJ Impara Italiano! ${
+      porcentaje >= 80 ? '🎯' : porcentaje >= 60 ? '👍' : '💪'
+    }\nPorcentaje: ${porcentaje}%\n#AprendeItaliano #JJImparaItaliano`;
+
+    if (navigator.share) {
+      navigator.share({ title: 'JJ Impara Italiano', text: mensaje });
+    } else {
+      navigator.clipboard.writeText(mensaje).then(() => {
+        showNotification("✅ Resultado copiado");
+      }).catch(() => {
+        showNotification("❌ No se pudo copiar", true);
+      });
+    }
+  }
+
   // === EVENT LISTENERS ===
   document.getElementById('btn-categorias')?.addEventListener('click', mostrarCategorias);
   document.getElementById('btn-verbos')?.addEventListener('click', iniciarVerbos);
@@ -1223,6 +1243,12 @@ const vocabularioPorCategoria = {
     document.getElementById('import-file').click();
   });
   document.getElementById('import-file')?.addEventListener('change', importarProgreso);
+  document.getElementById('btn-compartir')?.addEventListener('click', () => {
+    if (window.ultimosResultados) {
+      const { aciertos, total, porcentaje } = window.ultimosResultados;
+      compartirResultados(aciertos, total, porcentaje);
+    }
+  });
   document.getElementById('cat-todo')?.addEventListener('click', () => iniciarVocabulario('todo'));
   document.getElementById('cat-basico')?.addEventListener('click', () => iniciarVocabulario('basico'));
   document.getElementById('cat-comida')?.addEventListener('click', () => iniciarVocabulario('comida'));
