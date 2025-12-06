@@ -289,7 +289,7 @@ const vocabularioPorCategoria = {
       passato: ["ho letto", "hai letto", "ha letto", "abbiamo letto", "avete letto", "hanno letto"],
       futuro: ["leggerò", "leggerai", "leggerà", "leggeremo", "leggerete", "leggeranno"]
     },
-    // 🔹 NUEVOS VERBOS IRREGULARES 🔹
+        // 🔹 NUEVOS VERBOS IRREGULARES 🔹
     mettere: {
       presente: ["metto", "metti", "mette", "mettiamo", "mettete", "mettono"],
       passato: ["ho messo", "hai messo", "ha messo", "abbiamo messo", "avete messo", "hanno messo"],
@@ -791,6 +791,58 @@ const vocabularioPorCategoria = {
     }, 2000);
   }
 
+  // === EXPORTAR/IMPORTAR PROGRESO ===
+  function exportarProgreso() {
+    try {
+      const datos = {
+        stats_italiano: localStorage.getItem('stats_italiano'),
+        errores_italiano: localStorage.getItem('errores_italiano'),
+        examenes_italiano: localStorage.getItem('examenes_italiano'),
+        repasos_italiano: localStorage.getItem('repasos_italiano'),
+        desafio_italiano: localStorage.getItem('desafio_italiano'),
+        theme: localStorage.getItem('theme')
+      };
+      
+      const blob = new Blob([JSON.stringify(datos, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'italiano-progreso.json';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showNotification("✅ Progreso exportado");
+    } catch (e) {
+      showNotification("❌ Error al exportar", true);
+    }
+  }
+
+  function importarProgreso(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const datos = JSON.parse(e.target.result);
+        if (datos.stats_italiano) localStorage.setItem('stats_italiano', datos.stats_italiano);
+        if (datos.errores_italiano) localStorage.setItem('errores_italiano', datos.errores_italiano);
+        if (datos.examenes_italiano) localStorage.setItem('examenes_italiano', datos.examenes_italiano);
+        if (datos.repasos_italiano) localStorage.setItem('repasos_italiano', datos.repasos_italiano);
+        if (datos.desafio_italiano) localStorage.setItem('desafio_italiano', datos.desafio_italiano);
+        if (datos.theme) localStorage.setItem('theme', datos.theme);
+        
+        showNotification("✅ Progreso restaurado. Recargando...");
+        setTimeout(() => location.reload(), 1500);
+      } catch (e) {
+        showNotification("❌ Archivo no válido", true);
+      }
+    };
+    reader.readAsText(file);
+    event.target.value = '';
+  }
+
   // === FUNCIONES DE JUEGO ===
   function volverMenuJuego() {
     if (temporizador) clearInterval(temporizador);
@@ -1032,7 +1084,7 @@ const vocabularioPorCategoria = {
         };
       }
     }
-  }
+        }
 
   function verificarRespuesta(respuesta, correcta, contexto, tipo) {
     if (respuesta === correcta) {
@@ -1166,6 +1218,11 @@ const vocabularioPorCategoria = {
   document.getElementById('btn-examen')?.addEventListener('click', iniciarExamen);
   document.getElementById('btn-desafio')?.addEventListener('click', iniciarDesafioDiario);
   document.getElementById('btn-errores')?.addEventListener('click', mostrarErrores);
+  document.getElementById('btn-exportar')?.addEventListener('click', exportarProgreso);
+  document.getElementById('btn-importar')?.addEventListener('click', () => {
+    document.getElementById('import-file').click();
+  });
+  document.getElementById('import-file')?.addEventListener('change', importarProgreso);
   document.getElementById('cat-todo')?.addEventListener('click', () => iniciarVocabulario('todo'));
   document.getElementById('cat-basico')?.addEventListener('click', () => iniciarVocabulario('basico'));
   document.getElementById('cat-comida')?.addEventListener('click', () => iniciarVocabulario('comida'));
