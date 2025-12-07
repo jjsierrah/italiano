@@ -211,8 +211,7 @@ const vocabularioPorCategoria = {
     });
   }
   generarConjugaciones();
-
-  // === VERBOS IRREGULARES AMPLIADOS (30 esenciales) ===
+    // === VERBOS IRREGULARES AMPLIADOS (30 esenciales) ===
   const verbosIrregulares = {
     andare: {
       presente: ["vado", "vai", "va", "andiamo", "andate", "vanno"],
@@ -289,7 +288,7 @@ const vocabularioPorCategoria = {
       passato: ["ho letto", "hai letto", "ha letto", "abbiamo letto", "avete letto", "hanno letto"],
       futuro: ["leggerò", "leggerai", "leggerà", "leggeremo", "leggerete", "leggeranno"]
     },
-        // 🔹 NUEVOS VERBOS IRREGULARES 🔹
+    // 🔹 NUEVOS VERBOS IRREGULARES 🔹
     mettere: {
       presente: ["metto", "metti", "mette", "mettiamo", "mettete", "mettono"],
       passato: ["ho messo", "hai messo", "ha messo", "abbiamo messo", "avete messo", "hanno messo"],
@@ -402,7 +401,7 @@ const vocabularioPorCategoria = {
       const j = Math.floor(Math.random() * (i + 1));
       [a[i], a[j]] = [a[j], a[i]];
     }
-  }
+       }
     // === SISTEMA DE REPASO (SRS) ===
   function calcularProximoRepaso(nivel) {
     const hoy = new Date();
@@ -779,7 +778,7 @@ const vocabularioPorCategoria = {
     document.getElementById('count-salud').textContent = vocabularioPorCategoria.salud.length;
     document.getElementById('count-clima').textContent = vocabularioPorCategoria.clima.length;
     document.getElementById('count-expresiones').textContent = vocabularioPorCategoria.expresiones.length;
-  }
+            }
     // === Sistema de notificaciones integrado ===
   function showNotification(message, isError = false) {
     const el = document.getElementById('notification');
@@ -858,21 +857,30 @@ const vocabularioPorCategoria = {
     document.getElementById('menu-principal').style.display = 'block';
     actualizarStats();
   }
-
-  function toggleModo() {
-    if (examenActivo) return;
-    modoEscritura = !modoEscritura;
-    const btn = document.getElementById('btn-toggle-modo');
-    if (btn) {
-      btn.textContent = modoEscritura ? '↔️ Cambiar a opción múltiple' : '↔️ Cambiar a modo escritura';
-    }
-    document.getElementById('opciones').style.display = modoEscritura ? 'none' : 'block';
-    document.getElementById('respuesta-escrita').style.display = modoEscritura ? 'block' : 'none';
-    document.getElementById('btn-enviar').style.display = modoEscritura ? 'block' : 'none';
-    if (modoEscritura) {
-      document.getElementById('respuesta-escrita').focus();
-    }
+  
+function toggleModo() {
+  modoEscritura = !modoEscritura;
+  const btn = document.getElementById('btn-toggle-modo');
+  if (btn) {
+    btn.textContent = modoEscritura ? '↔️ Cambiar a opción múltiple' : '↔️ Cambiar a modo escritura';
   }
+  document.getElementById('opciones').style.display = modoEscritura ? 'none' : 'block';
+  document.getElementById('respuesta-escrita').style.display = modoEscritura ? 'block' : 'none';
+  document.getElementById('btn-enviar').style.display = modoEscritura ? 'block' : 'none';
+  
+  if (modoEscritura) {
+    document.getElementById('respuesta-escrita').focus();
+  }
+
+  // Reiniciar la pregunta actual según el modo
+  if (examenActivo) {
+    mostrarSiguientePreguntaExamen();
+  } else if (modo === 'vocabulario') {
+    mostrarPreguntaVocabulario();
+  } else if (modo === 'verbos') {
+    mostrarPreguntaVerbo();
+  }
+}
 
   function iniciarVocabulario(categoria) {
     modo = 'vocabulario';
@@ -1088,7 +1096,6 @@ const vocabularioPorCategoria = {
       }
     }
   }
-
     function verificarRespuesta(respuesta, correcta, contexto, tipo) {
     if (respuesta === correcta) {
       statsSesion.aciertos++;
